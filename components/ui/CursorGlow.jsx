@@ -2,7 +2,6 @@
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
-import useSafeReducedMotion from "@/components/ui/useSafeReducedMotion";
 
 /**
  * Dual-ring cursor glow.
@@ -11,7 +10,6 @@ import useSafeReducedMotion from "@/components/ui/useSafeReducedMotion";
  * Both are fixed overlays, pointer-events-none, GPU composited.
  */
 export default function CursorGlow() {
-  const reduceMotion = useSafeReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [hasPointer, setHasPointer] = useState(false);
 
@@ -43,7 +41,7 @@ export default function CursorGlow() {
     return () => window.removeEventListener("pointermove", onMove);
   }, [mounted, hasPointer, rawX, rawY]);
 
-  if (!mounted || !hasPointer || reduceMotion) return null;
+  if (!mounted || !hasPointer) return null;
 
   return (
     <>

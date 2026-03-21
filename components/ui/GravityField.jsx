@@ -10,18 +10,15 @@
  */
 
 import { useEffect, useRef } from "react";
-import useSafeReducedMotion from "@/components/ui/useSafeReducedMotion";
 
 export default function GravityField({
   radius  = 150,   // px — no gravity beyond this
   maxPull = 5,     // px — max translation
 }) {
-  const reduceMotion = useSafeReducedMotion();
   const rafRef  = useRef(null);
   const mouseRef = useRef({ x: -9999, y: -9999 }); // off-screen default = no pull
 
   useEffect(() => {
-    if (reduceMotion) return;
 
     const onMouse = (e) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
@@ -76,7 +73,7 @@ export default function GravityField({
         el.style.transition = "transform 0.55s cubic-bezier(0.22,1,0.36,1)";
       });
     };
-  }, [reduceMotion, radius, maxPull]);
+  }, [radius, maxPull]);
 
   return null; // Invisible — pure interaction layer
 }

@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import useSafeReducedMotion from "@/components/ui/useSafeReducedMotion";
 
 // Context exposes raw spring motion values so child components can
 // read the cursor position for context-aware lighting effects.
@@ -20,7 +19,6 @@ export function useLightPosition() {
  * - Light is context-aware: intensity guided by element hover states via CSS
  */
 export default function LightSystem({ children }) {
-  const reduceMotion = useSafeReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [hasPointer, setHasPointer] = useState(false);
 
@@ -53,7 +51,7 @@ export default function LightSystem({ children }) {
     return () => window.removeEventListener("pointermove", onMove);
   }, [mounted, hasPointer, rawX, rawY]);
 
-  const showLight = mounted && hasPointer && !reduceMotion;
+  const showLight = mounted && hasPointer;
 
   return (
     <LightContext.Provider value={{ x: innerX, y: innerY }}>

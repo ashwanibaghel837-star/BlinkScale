@@ -265,7 +265,20 @@ body::after {
   }
 }
 .sun-orb {
-  animation: sunGlowPulse 3.5s ease-in-out infinite;
+  /* box-shadow from sunGlowPulse, scale from sunBreathe — different properties, no conflict ✓ */
+  animation: sunGlowPulse 3.5s ease-in-out infinite, sunBreathe 5.5s ease-in-out infinite;
+}
+
+/* ─── Sun: slow scale breathing (scale only, box-shadow handled by sunGlowPulse) ─── */
+@keyframes sunBreathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);    }
+  50%       { transform: translate(-50%, -50%) scale(1.06); }
+}
+
+/* ─── Sun outer halo — independent pulse, slower & bigger ─── */
+@keyframes sunHalo {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.65; }
+  50%       { transform: translate(-50%, -50%) scale(1.1);  opacity: 1;    }
 }
 
 /* ─── Aura blob drift (applied to body::after) ─── */

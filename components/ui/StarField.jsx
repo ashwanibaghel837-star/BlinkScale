@@ -12,7 +12,6 @@
  */
 
 import { useEffect, useRef } from "react";
-import useSafeReducedMotion from "@/components/ui/useSafeReducedMotion";
 
 // Pre-generate static star data (runs once at module load — stable across renders)
 function genStars(count, layer) {
@@ -84,7 +83,6 @@ function StarLayer({ stars, layerRef }) {
 }
 
 export default function StarField() {
-  const reduceMotion = useSafeReducedMotion();
   const farRef  = useRef(null);
   const midRef  = useRef(null);
   const nearRef = useRef(null);
@@ -92,7 +90,6 @@ export default function StarField() {
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
 
   useEffect(() => {
-    if (reduceMotion) return;
 
     const onMouse = (e) => {
       mouseRef.current = {
@@ -126,7 +123,7 @@ export default function StarField() {
       window.removeEventListener("mousemove", onMouse);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [reduceMotion]);
+  }, []);
 
   return (
     <div
@@ -140,7 +137,7 @@ export default function StarField() {
       <StarLayer stars={NEAR_STARS} layerRef={nearRef} />
 
       {/* Shooting stars — pure CSS, appear rarely */}
-      {!reduceMotion && SHOOTING.map((s, i) => (
+      {SHOOTING.map((s, i) => (
         <span
           key={i}
           className="shooting-star"
