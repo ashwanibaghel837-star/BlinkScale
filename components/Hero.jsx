@@ -38,16 +38,9 @@ export default function Hero() {
   const heroRef = useRef(null);
   const [titleComplete, setTitleComplete] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Mouse 3D tilt on the solar system container
@@ -186,7 +179,7 @@ export default function Hero() {
             </motion.div>
 
             {/* ── SOLAR SYSTEM ── */}
-            {mounted && !isMobile && (
+            {mounted && (
               <motion.div
                 style={{ opacity: solarOpacity, scale: solarScale, y: solarY }}
                 className="relative mx-auto mt-10 sm:mt-6 flex w-full justify-center h-[380px] sm:h-[600px] lg:h-[960px] overflow-visible"

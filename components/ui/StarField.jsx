@@ -1,41 +1,34 @@
 "use client";
 
-/**
- * PREMIUM STARFIELD — 3-Layer Depth System + Parallax Nebulas
- * ─────────────────────────────────────────────────────────────
- * Far layer   : 75 tiny stars, slowest parallax
- * Mid layer   : 50 medium stars, steady parallax
- * Near layer  : 25 larger stars, fastest parallax
- * 
- * Nebulas     : 2 soft blobs that subtly shift with mouse
- * Shooting    : Exactly 1 shooting star at a time, triggers every 8-12s
- */
-
 import { useEffect, useRef, useState } from "react";
 
-// Pre-generate static star data
+// Pseudo-random generator with fixed seed to keep star layout consistent
 function genStars(count, layer) {
   const sizeRange  = { far: [0.8, 1.4], mid: [1.3, 1.8], near: [1.8, 2.5] };
   const opacRange  = { far: [0.15, 0.35], mid: [0.35, 0.6], near: [0.55, 0.8] };
   const twinklePct = { far: 0.6, mid: 0.75, near: 0.9 };
+  const parallaxSpeed = { far: 0.06, mid: 0.14, near: 0.25 };
+  const parallaxMouse = { far: 0.25, mid: 0.55, near: 1.1 };
   
   const [sMin, sMax] = sizeRange[layer];
   const [oMin, oMax] = opacRange[layer];
 
-  let seed = layer === "far" ? 1 : layer === "mid" ? 2 : 3;
+  let seed = layer === "far" ? 12345 : layer === "mid" ? 67890 : 111213;
   const rand = () => { seed = (seed * 1664525 + 1013904223) & 0xffffffff; return (seed >>> 0) / 0xffffffff; };
 
   return Array.from({ length: count }, (_, i) => {
     const twinkle = rand() < twinklePct[layer];
     return {
       id: `${layer}-${i}`,
-      top: rand() * 100,
-      left: rand() * 100,
+      x: -0.05 + rand() * 1.1, // slightly wider than 0..1 to hide edges during mouse move
+      y: rand() * 3, // virtual Y coordinate multiplier
       size: sMin + rand() * (sMax - sMin),
-      opacity: oMin + rand() * (oMax - oMin),
+      baseOpacity: oMin + rand() * (oMax - oMin),
       twinkle,
-      twinkleDur: twinkle ? 1.5 + rand() * 2.5 : 0,  // Faster twinkle: 1.5–4.0s
-      twinkleDelay: twinkle ? rand() * 5 : 0,   // tighter offset
+      twinkleDur: twinkle ? (1.5 + rand() * 2.5) * 1000 : 0,  // ms
+      twinkleDelay: twinkle ? rand() * 5000 : 0,             // ms
+      parallax: parallaxSpeed[layer],
+      parallaxMouse: parallaxMouse[layer],
     };
   });
 }
@@ -43,208 +36,214 @@ function genStars(count, layer) {
 const FAR_STARS  = genStars(120, "far");
 const MID_STARS  = genStars(80, "mid");
 const NEAR_STARS = genStars(40, "near");
+const ALL_STARS = [...FAR_STARS, ...MID_STARS, ...NEAR_STARS];
 
-function StarLayer({ stars, layerRef, disableTwinkle = false }) {
-  return (
-    <div
-      ref={layerRef}
-      className="pointer-events-none absolute inset-x-[-5%] top-[-100vh] h-[300vh]"
-      aria-hidden="true"
-      style={{ willChange: "transform" }}
-    >
-      {/* Tile 1: Top (-100vh) */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[100vh]">
-        {stars.map((s) => (
-          <span
-            key={`${s.id}-t1`}
-            style={{
-              position: "absolute",
-              top: `${s.top}%`,
-              left: `${s.left}%`,
-              width: s.size,
-              height: s.size,
-              borderRadius: "50%",
-              background: "white",
-              opacity: s.opacity,
-              willChange: !disableTwinkle && s.twinkle ? "opacity" : "auto",
-              animation: !disableTwinkle && s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
-            }}
-          />
-        ))}
-      </div>
+const NEBULAS = [
+  // Blob 1: Electric Blue - visible at start
+  { x: 0.15, y: 0.08, size: 0.45, color: "rgba(0, 87, 255, 0.22)", stop: 0.65, driftSpeed: 0.0002, driftAmp: 0.02 },
+  // Blob 2: Silver Mist - visible early-mid scroll
+  { x: 0.90, y: 0.65, size: 0.40, color: "rgba(226, 232, 240, 0.05)", stop: 0.60, driftSpeed: 0.00015, driftAmp: 0.015 },
+  // Blob 3: Deep Blue - visible mid scroll
+  { x: 0.20, y: 1.35, size: 0.48, color: "rgba(0, 31, 128, 0.28)", stop: 0.68, driftSpeed: 0.00018, driftAmp: 0.02 },
+  // Blob 4: Electric Blue - visible late scroll
+  { x: 0.85, y: 2.10, size: 0.42, color: "rgba(0, 87, 255, 0.16)", stop: 0.62, driftSpeed: 0.00012, driftAmp: 0.018 },
+  // Blob 5: Silver Mist - visible near bottom
+  { x: 0.10, y: 2.80, size: 0.46, color: "rgba(226, 232, 240, 0.05)", stop: 0.65, driftSpeed: 0.00022, driftAmp: 0.02 },
+  // Blob 6: Deep Blue - visible at footer
+  { x: 0.88, y: 3.50, size: 0.40, color: "rgba(0, 31, 128, 0.24)", stop: 0.60, driftSpeed: 0.00014, driftAmp: 0.015 },
+];
 
-      {/* Tile 2: Center (0vh) */}
-      <div className="pointer-events-none absolute inset-x-0 top-[100vh] h-[100vh]">
-        {stars.map((s) => (
-          <span
-            key={`${s.id}-t2`}
-            style={{
-              position: "absolute",
-              top: `${s.top}%`,
-              left: `${s.left}%`,
-              width: s.size,
-              height: s.size,
-              borderRadius: "50%",
-              background: "white",
-              opacity: s.opacity,
-              willChange: !disableTwinkle && s.twinkle ? "opacity" : "auto",
-              animation: !disableTwinkle && s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Tile 3: Bottom (100vh) */}
-      <div className="pointer-events-none absolute inset-x-0 top-[200vh] h-[100vh]">
-        {stars.map((s) => (
-          <span
-            key={`${s.id}-t3`}
-            style={{
-              position: "absolute",
-              top: `${s.top}%`,
-              left: `${s.left}%`,
-              width: s.size,
-              height: s.size,
-              borderRadius: "50%",
-              background: "white",
-              opacity: s.opacity,
-              willChange: !disableTwinkle && s.twinkle ? "opacity" : "auto",
-              animation: !disableTwinkle && s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
+const PRESET_SHOOTING_STARS = [
+  { top: 5,  left: 10, angle: 30,  len: 160, travel: 1200, dur: 3.5 }, // TL -> BR
+  { top: 15, left: 85, angle: 150, len: 160, travel: 1200, dur: 4 },   // TR -> BL
+  { top: 80, left: 10, angle: -30, len: 140, travel: 1000, dur: 3.8 }, // BL -> TR
+];
 
 export default function StarField() {
-  const farRef  = useRef(null);
-  const midRef  = useRef(null);
-  const nearRef = useRef(null);
-  const nebulaContainerRef = useRef(null);
-  
-  const rafRef  = useRef(null);
+  const canvasRef = useRef(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
-
-  // Single organic shooting star state
-  const [shootingStar, setShootingStar] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  
+  // Ref for the active shooting star
+  const activeShootingStarRef = useRef(null);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
+    setMounted(true);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    // Only run mouse parallax if the device has a fine pointer (desktop with mouse)
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Set dimensions
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    // Mouse listener
     const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
-    let onMouse = null;
-    let onScroll = null;
+    const onMouseMove = (e) => {
+      mouseRef.current = {
+        x: e.clientX / window.innerWidth,
+        y: e.clientY / window.innerHeight,
+      };
+    };
 
     if (hasFinePointer) {
-      onMouse = (e) => {
-        mouseRef.current = {
-          x: e.clientX / window.innerWidth,
-          y: e.clientY / window.innerHeight,
-        };
-      };
-      window.addEventListener("mousemove", onMouse, { passive: true });
-
-      let tx = 0.5, ty = 0.5;
-      let lastScrollY = -1;
-      const tick = () => {
-        const dx = mouseRef.current.x - tx;
-        const dy = mouseRef.current.y - ty;
-        const sy = window.scrollY;
-        const vh = window.innerHeight || 1000;
-
-        // Only write to DOM if coordinates are actively changing or user is scrolling
-        if (Math.abs(dx) > 0.0001 || Math.abs(dy) > 0.0001 || sy !== lastScrollY) {
-          tx += dx * 0.04;
-          ty += dy * 0.04;
-          lastScrollY = sy;
-
-          const ox = (tx - 0.5) * 80;
-          const oy = (ty - 0.5) * 80;
-
-          // Modulo scroll calculations for seamless looping
-          const yFar = (sy * -0.06) % vh;
-          const yMid = (sy * -0.14) % vh;
-          const yNear = (sy * -0.25) % vh;
-
-          // Stars parallax with hardware-accelerated translate3d
-          if (farRef.current)  farRef.current.style.transform  = `translate3d(${ox * 0.25}px, ${oy * 0.25 + yFar}px, 0)`;
-          if (midRef.current)  midRef.current.style.transform  = `translate3d(${ox * 0.55}px, ${oy * 0.55 + yMid}px, 0)`;
-          if (nearRef.current) nearRef.current.style.transform = `translate3d(${ox * 1.1}px, ${oy * 1.1 + yNear}px, 0)`;
-          
-          // Nebula container parallax (translates the single nebula container containing all scattered blobs)
-          if (nebulaContainerRef.current) {
-            nebulaContainerRef.current.style.transform = `translate3d(${-ox * 0.5}px, ${-oy * 0.5 + sy * -0.15}px, 0)`;
-          }
-        }
-
-        rafRef.current = requestAnimationFrame(tick);
-      };
-      rafRef.current = requestAnimationFrame(tick);
-    } else {
-      // On mobile/touch, run a high-performance passive scroll event listener
-      onScroll = () => {
-        const sy = window.scrollY;
-        const vh = window.innerHeight || 1000;
-        
-        const yFar = (sy * -0.06) % vh;
-        const yMid = (sy * -0.14) % vh;
-        const yNear = (sy * -0.25) % vh;
-        
-        if (farRef.current)  farRef.current.style.transform  = `translate3d(0, ${yFar}px, 0)`;
-        if (midRef.current)  midRef.current.style.transform  = `translate3d(0, ${yMid}px, 0)`;
-        if (nearRef.current) nearRef.current.style.transform = `translate3d(0, ${yNear}px, 0)`;
-        
-        if (nebulaContainerRef.current) {
-          nebulaContainerRef.current.style.transform = `translate3d(0, ${sy * -0.15}px, 0)`;
-        }
-      };
-      window.addEventListener("scroll", onScroll, { passive: true });
-      onScroll(); // Initialize positions
+      window.addEventListener("mousemove", onMouseMove, { passive: true });
     }
 
-    // ── Shooting Star Sequencer (Exactly 10s gap, 3 specific paths) ──
+    // Shooting star trigger interval
     let timeoutId;
-    if (!isMobile) {
-      const presetShootingStars = [
-        { top: 5,  left: 10, angle: 30,  len: 160, travel: 1200, dur: 3.5 }, // TL -> BR
-        { top: 15, left: 85, angle: 150, len: 160, travel: 1200, dur: 4 },   // TR -> BL
-        { top: 80, left: 10, angle: -30, len: 140, travel: 1000, dur: 3.8 }, // BL -> TR
-      ];
-      let currentShootingIndex = 0;
-      
-      const triggerShootingStar = () => {
-        setShootingStar(null);
-        setTimeout(() => {
-          setShootingStar(presetShootingStars[currentShootingIndex]);
-          currentShootingIndex = (currentShootingIndex + 1) % presetShootingStars.length;
-          timeoutId = setTimeout(triggerShootingStar, 10000); // exactly 10s next
-        }, 50);
+    let currentShootingIndex = 0;
+
+    const triggerShootingStar = () => {
+      const preset = PRESET_SHOOTING_STARS[currentShootingIndex];
+      activeShootingStarRef.current = {
+        ...preset,
+        startTime: performance.now(),
       };
-      
-      // Initial start
-      timeoutId = setTimeout(triggerShootingStar, 3000);
-    }
+      currentShootingIndex = (currentShootingIndex + 1) % PRESET_SHOOTING_STARS.length;
+      timeoutId = setTimeout(triggerShootingStar, 10000); // Trigger every 10 seconds
+    };
+
+    // Delay first shooting star by 3 seconds
+    timeoutId = setTimeout(triggerShootingStar, 3000);
+
+    // Animation Loop
+    let smoothMx = 0.5;
+    let smoothMy = 0.5;
+    let rafId;
+
+    const tick = (timestamp) => {
+      // Lerp mouse values for smooth movement
+      smoothMx += (mouseRef.current.x - smoothMx) * 0.04;
+      smoothMy += (mouseRef.current.y - smoothMy) * 0.04;
+
+      const ox = (smoothMx - 0.5) * 80;
+      const oy = (smoothMy - 0.5) * 80;
+      const sy = window.scrollY;
+
+      const width = canvas.width;
+      const height = canvas.height;
+
+      // Clear screen
+      ctx.clearRect(0, 0, width, height);
+
+      // 1. Draw Nebulas
+      NEBULAS.forEach((neb) => {
+        const driftX = Math.sin(timestamp * neb.driftSpeed) * neb.driftAmp * width;
+        const driftY = Math.cos(timestamp * neb.driftSpeed * 0.75) * neb.driftAmp * height;
+
+        // Position neb with scroll parallax and mouse movement
+        const nebX = neb.x * width - ox * 0.5 + driftX;
+        const nebY = neb.y * height - sy * 0.15 - oy * 0.5 + driftY;
+        const radius = neb.size * width;
+
+        // Visibility check (if offscreen, skip draw call)
+        if (nebY + radius < 0 || nebY - radius > height) return;
+
+        const grad = ctx.createRadialGradient(nebX, nebY, 0, nebX, nebY, radius);
+        grad.addColorStop(0, neb.color);
+        grad.addColorStop(neb.stop, "rgba(0, 0, 0, 0)");
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(nebX, nebY, radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 2. Draw Stars (Far, Mid, Near)
+      const virtualHeight = height * 3;
+
+      ALL_STARS.forEach((star) => {
+        // Calculate Y position with scroll parallax and wrap around virtual height
+        let y = (star.y * virtualHeight - sy * star.parallax) % virtualHeight;
+        if (y < 0) y += virtualHeight;
+
+        // Only draw if visible on screen
+        if (y < -star.size || y > height + star.size) return;
+
+        // Calculate X position with mouse parallax
+        const x = star.x * width + ox * star.parallaxMouse;
+
+        // Twinkle opacity
+        let opacity = star.baseOpacity;
+        if (star.twinkle) {
+          const age = (timestamp - star.twinkleDelay) / star.twinkleDur;
+          const wave = Math.sin(age * Math.PI * 2); // -1 to 1
+          opacity = star.baseOpacity * (0.15 + 0.85 * (wave + 1) / 2);
+        }
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+        ctx.beginPath();
+        ctx.arc(x, y, star.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 3. Draw Shooting Star (if active)
+      if (activeShootingStarRef.current) {
+        const ss = activeShootingStarRef.current;
+        const elapsed = (timestamp - ss.startTime) / 1000;
+        
+        if (elapsed > ss.dur) {
+          activeShootingStarRef.current = null;
+        } else if (elapsed <= ss.dur * 0.3) { // Travel phase (first 30% of duration)
+          const travelP = elapsed / (ss.dur * 0.3); // 0 to 1
+          const currentTravel = travelP * ss.travel;
+          const angleRad = (ss.angle * Math.PI) / 180;
+          
+          const startX = (ss.left / 100) * width;
+          const startY = (ss.top / 100) * height;
+          
+          const headX = startX + Math.cos(angleRad) * currentTravel;
+          const headY = startY + Math.sin(angleRad) * currentTravel;
+          
+          const tailX = headX - Math.cos(angleRad) * ss.len;
+          const tailY = headY - Math.sin(angleRad) * ss.len;
+          
+          // Calculate fade in/out opacity
+          const p = elapsed / ss.dur; // 0 to 0.3
+          let ssOpacity = 0;
+          if (p < 0.06) {
+            ssOpacity = p / 0.06;
+          } else if (p >= 0.06 && p <= 0.3) {
+            ssOpacity = 1 - (p - 0.06) / (0.3 - 0.06);
+          }
+          
+          // Create line gradient
+          const ssGrad = ctx.createLinearGradient(tailX, tailY, headX, headY);
+          ssGrad.addColorStop(0, "rgba(255, 255, 255, 0)");
+          ssGrad.addColorStop(0.5, `rgba(255, 255, 255, ${ssOpacity * 0.9})`);
+          ssGrad.addColorStop(0.9, `rgba(255, 255, 255, ${ssOpacity})`);
+          ssGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+          
+          ctx.strokeStyle = ssGrad;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(tailX, tailY);
+          ctx.lineTo(headX, headY);
+          ctx.stroke();
+        }
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
 
     return () => {
-      window.removeEventListener("resize", checkMobile);
-      if (hasFinePointer && onMouse) {
-        window.removeEventListener("mousemove", onMouse);
+      window.removeEventListener("resize", resizeCanvas);
+      if (hasFinePointer) {
+        window.removeEventListener("mousemove", onMouseMove);
       }
-      if (!hasFinePointer && onScroll) {
-        window.removeEventListener("scroll", onScroll);
-      }
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(rafId);
       clearTimeout(timeoutId);
     };
-  }, [isMobile]);
+  }, []);
 
   return (
     <div
@@ -252,101 +251,7 @@ export default function StarField() {
       aria-hidden="true"
       role="presentation"
     >
-      {/* ── Nebula Container (Translates on scroll + mouse movement) ── */}
-      <div
-        ref={nebulaContainerRef}
-        className="pointer-events-none absolute inset-x-0 top-0 h-[400vh]"
-        style={{ willChange: "transform" }}
-      >
-        {/* Blob 1: Electric Blue - visible at start */}
-        <div style={{
-          position: "absolute", top: "8vh", left: "15%",
-          width: "45vw", height: "45vw", borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(0, 87, 255, 0.22) 0%, transparent 65%)",
-          filter: "blur(70px)",
-          animation: isMobile ? "none" : "auraDrift 16s ease-in-out infinite alternate",
-        }} />
-        
-        {/* Blob 2: Silver Mist - visible early-mid scroll */}
-        <div style={{
-          position: "absolute", top: "65vh", right: "10%",
-          width: "40vw", height: "40vw", borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(226, 232, 240, 0.05) 0%, transparent 60%)",
-          filter: "blur(65px)",
-          animation: isMobile ? "none" : "auraDrift 22s ease-in-out infinite alternate-reverse",
-        }} />
-
-        {/* Blob 3: Deep Blue - visible mid scroll */}
-        {!isMobile && (
-          <div style={{
-            position: "absolute", top: "135vh", left: "20%",
-            width: "48vw", height: "48vw", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(0, 31, 128, 0.28) 0%, transparent 68%)",
-            filter: "blur(80px)",
-            animation: "auraDrift 20s ease-in-out infinite alternate",
-          }} />
-        )}
-
-        {/* Blob 4: Electric Blue - visible late scroll */}
-        {!isMobile && (
-          <div style={{
-            position: "absolute", top: "210vh", right: "15%",
-            width: "42vw", height: "42vw", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(0, 87, 255, 0.16) 0%, transparent 62%)",
-            filter: "blur(70px)",
-            animation: "auraDrift 26s ease-in-out infinite alternate-reverse",
-          }} />
-        )}
-
-        {/* Blob 5: Silver Mist - visible near bottom */}
-        <div style={{
-          position: "absolute", top: "280vh", left: "10%",
-          width: "46vw", height: "46vw", borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(226, 232, 240, 0.05) 0%, transparent 65%)",
-          filter: "blur(75px)",
-          animation: isMobile ? "none" : "auraDrift 18s ease-in-out infinite alternate",
-        }} />
-
-        {/* Blob 6: Deep Blue - visible at footer */}
-        {!isMobile && (
-          <div style={{
-            position: "absolute", top: "350vh", right: "12%",
-            width: "40vw", height: "40vw", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(0, 31, 128, 0.24) 0%, transparent 60%)",
-            filter: "blur(60px)",
-            animation: "auraDrift 24s ease-in-out infinite alternate-reverse",
-          }} />
-        )}
-      </div>
-
-      {/* ── 3 Star Layers (Seamless looping) ── */}
-      <StarLayer stars={FAR_STARS}  layerRef={farRef} disableTwinkle={isMobile} />
-      {!isMobile && <StarLayer stars={MID_STARS}  layerRef={midRef} disableTwinkle={false} />}
-      {!isMobile && <StarLayer stars={NEAR_STARS} layerRef={nearRef} disableTwinkle={false} />}
-
-      {/* ── Single Shooting Star ── */}
-      {shootingStar && (
-        <div
-          style={{
-            position: "absolute",
-            top: `${shootingStar.top}%`,
-            left: `${shootingStar.left}%`,
-            transform: `rotate(${shootingStar.angle}deg)`,
-            pointerEvents: "none",
-            zIndex: 1,
-          }}
-        >
-          <span
-            className="shooting-star"
-            style={{
-              width: `${shootingStar.len}px`,
-              animationDuration: `${shootingStar.dur}s`,
-              animationIterationCount: 1,
-              "--ss-travel": `${shootingStar.travel}px`,
-            }}
-          />
-        </div>
-      )}
+      <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
     </div>
   );
 }

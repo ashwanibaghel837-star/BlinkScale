@@ -93,6 +93,7 @@ const PLANET_INFO = {
 };
 
 export default function SolarSystem() {
+  const containerRef = useRef(null);
   const wrapperRefs  = useRef([]);
   const atmRefs      = useRef([]);   // atmosphere divs
   const rafRef       = useRef(null);
@@ -106,6 +107,9 @@ export default function SolarSystem() {
   const mouseRef     = useRef({ x: 0, y: 0 }); // normalized -0.5 to 0.5
   const sunLightRef  = useRef({ x: 0, y: 0, op: 0.3 });
   const hasPointerRef = useRef(true);
+  const prevStyles = useRef(PLANETS.map(() => ({ transform: "", zIndex: "", opacity: "", filter: "" })));
+  const prevAtmStyles = useRef(PLANETS.map(() => ({ transform: "", zIndex: "", opacity: "" })));
+  const prevSun = useRef({ transform: "", opacity: "" });
 
   // React state for card + hover rings
   const [hovered,  setHovered]  = useState(-1);
@@ -142,8 +146,13 @@ export default function SolarSystem() {
     const sunMidEl = document.getElementById("sun-mid-glow");
     // Smoothed mouse position (lerped each frame for buttery movement)
     let smoothMx = 0, smoothMy = 0;
+    let isVisible = true;
 
     const tick = (ts) => {
+      if (!isVisible || document.hidden) {
+        rafRef.current = null;
+        return;
+      }
       if (!startRef.current) startRef.current = ts;
       const t = (ts - startRef.current) / 1000;
 
@@ -195,61 +204,87 @@ export default function SolarSystem() {
         // ── Z-index: front planets (rawY > 0) on top ──
         const zBase = rawY > 0 ? 12 : 8;
 
-        el.style.transform = `translate(${x}px, ${y}px) scale(${finalScale})`;
-        el.style.zIndex    = isFocused ? "40" : h === i ? "30" : `${zBase}`;
+        const transformStr = `translate(${x}px, ${y}px) scale(${finalScale})`;
+        const zIndexStrStr = isFocused ? "40" : h === i ? "30" : `${zBase}`;
 
         // ── Brightness / opacity ──
         const baseBright = 1 - (i / PLANETS.length) * 0.28;
         const isFocusMode = fc !== -1;
         const isFine = hasPointerRef.current;
 
+        let opacityStrStr = "1";
+        let filterStrStr = "none";
+
         if (isFocusMode) {
           if (isFocused) {
-            el.style.opacity = "1";
+            opacityStrStr = "1";
             if (isFine) {
-              el.style.filter  = `brightness(2) drop-shadow(0 0 ${size * 4}px rgba(${p.glow},1))`;
-            } else {
-              el.style.filter  = "none";
+              filterStrStr = `brightness(2) drop-shadow(0 0 ${size * 4}px rgba(${p.glow},1))`;
             }
           } else {
-            el.style.opacity = "0.12";
+            opacityStrStr = "0.12";
             if (isFine) {
-              el.style.filter  = `brightness(0.3)`;
-            } else {
-              el.style.filter  = "none";
+              filterStrStr = `brightness(0.3)`;
             }
           }
         } else if (h === -1) {
-          el.style.opacity = "1";
+          opacityStrStr = "1";
           if (isFine) {
-            el.style.filter  = `brightness(${baseBright})`;
-          } else {
-            el.style.filter  = "none";
+            filterStrStr = `brightness(${baseBright})`;
           }
         } else if (h === i) {
-          el.style.opacity = "1";
+          opacityStrStr = "1";
           if (isFine) {
-            el.style.filter  = `brightness(1.9) drop-shadow(0 0 ${size * 3}px rgba(${p.glow},0.95))`;
-          } else {
-            el.style.filter  = "none";
+            filterStrStr = `brightness(1.9) drop-shadow(0 0 ${size * 3}px rgba(${p.glow},0.95))`;
           }
           // Sun shifts toward hovered
           const dist = Math.sqrt(ox * ox + oy * oy);
           if (dist > 0) { targetSunX = (ox / dist) * 20; targetSunY = (oy / dist) * 20; targetSunOp = 0.6; }
         } else {
-          el.style.opacity = "0.2";
+          opacityStrStr = "0.2";
           if (isFine) {
-            el.style.filter  = `brightness(${baseBright * 0.35})`;
-          } else {
-            el.style.filter  = "none";
+            filterStrStr = `brightness(${baseBright * 0.35})`;
           }
+        }
+
+        // Apply styled values only when changed to avoid DOM write thrashing
+        const prev = prevStyles.current[i];
+        if (prev.transform !== transformStr) {
+          el.style.transform = transformStr;
+          prev.transform = transformStr;
+        }
+        if (prev.zIndex !== zIndexStrStr) {
+          el.style.zIndex = zIndexStrStr;
+          prev.zIndex = zIndexStrStr;
+        }
+        if (prev.opacity !== opacityStrStr) {
+          el.style.opacity = opacityStrStr;
+          prev.opacity = opacityStrStr;
+        }
+        if (prev.filter !== filterStrStr) {
+          el.style.filter = filterStrStr;
+          prev.filter = filterStrStr;
         }
 
         // ── Atmosphere layer ──
         if (atm) {
-          atm.style.transform = el.style.transform;
-          atm.style.zIndex    = `${parseInt(el.style.zIndex) - 1}`;
-          atm.style.opacity   = isFocusMode ? (isFocused ? "0.55" : "0.04") : h === i ? "0.7" : "0.28";
+          const atmTransformStr = transformStr;
+          const atmZIndexStr = `${parseInt(zIndexStrStr) - 1}`;
+          const atmOpacityStr = isFocusMode ? (isFocused ? "0.55" : "0.04") : h === i ? "0.7" : "0.28";
+
+          const prevAtm = prevAtmStyles.current[i];
+          if (prevAtm.transform !== atmTransformStr) {
+            atm.style.transform = atmTransformStr;
+            prevAtm.transform = atmTransformStr;
+          }
+          if (prevAtm.zIndex !== atmZIndexStr) {
+            atm.style.zIndex = atmZIndexStr;
+            prevAtm.zIndex = atmZIndexStr;
+          }
+          if (prevAtm.opacity !== atmOpacityStr) {
+            atm.style.opacity = atmOpacityStr;
+            prevAtm.opacity = atmOpacityStr;
+          }
         }
       });
 
@@ -258,15 +293,67 @@ export default function SolarSystem() {
         sunLightRef.current.x  += (targetSunX - sunLightRef.current.x)  * 0.07;
         sunLightRef.current.y  += (targetSunY - sunLightRef.current.y)  * 0.07;
         sunLightRef.current.op += (targetSunOp - sunLightRef.current.op) * 0.07;
-        sunMidEl.style.transform = `translate(calc(-50% + ${sunLightRef.current.x}px), calc(-50% + ${sunLightRef.current.y}px))`;
-        sunMidEl.style.opacity   = sunLightRef.current.op;
+
+        const sunTransformStr = `translate(calc(-50% + ${sunLightRef.current.x}px), calc(-50% + ${sunLightRef.current.y}px))`;
+        const sunOpacityStr = `${sunLightRef.current.op}`;
+
+        if (prevSun.current.transform !== sunTransformStr) {
+          sunMidEl.style.transform = sunTransformStr;
+          prevSun.current.transform = sunTransformStr;
+        }
+        if (prevSun.current.opacity !== sunOpacityStr) {
+          sunMidEl.style.opacity = sunOpacityStr;
+          prevSun.current.opacity = sunOpacityStr;
+        }
       }
 
-      rafRef.current = requestAnimationFrame(tick);
+      if (isVisible && !document.hidden) {
+        rafRef.current = requestAnimationFrame(tick);
+      }
     };
 
-    rafRef.current = requestAnimationFrame(tick);
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !document.hidden) {
+          if (!rafRef.current) {
+            startRef.current = null;
+            rafRef.current = requestAnimationFrame(tick);
+          }
+        } else {
+          if (rafRef.current) {
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = null;
+          }
+        }
+      },
+      { threshold: 0.01 }
+    );
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (rafRef.current) {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+      } else {
+        if (isVisible && !rafRef.current) {
+          startRef.current = null;
+          rafRef.current = requestAnimationFrame(tick);
+        }
+      }
+    };
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (containerRef.current) observer.unobserve(containerRef.current);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   const info = focused >= 0 ? PLANET_INFO[PLANETS[focused].name] : null;
@@ -274,6 +361,7 @@ export default function SolarSystem() {
 
   return (
     <div
+      ref={containerRef}
       style={{ position: "relative", width: SOLAR_SIZE, height: SOLAR_SIZE, flexShrink: 0, overflow: "visible" }}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => {
@@ -326,29 +414,31 @@ export default function SolarSystem() {
       })}
 
       {/* ── Asteroid Belt ── */}
-      <div aria-hidden style={{
-        position: "absolute", top: "50%", left: "50%",
-        width: 0, height: 0,
-        animation: "asteroidBeltSpin 80s linear infinite",
-        pointerEvents: "none",
-        opacity: focused >= 0 ? 0.05 : hovered >= 0 ? 0.3 : 0.55,
-        transition: "opacity 0.6s ease",
-      }}>
-        {ASTEROIDS.map((a, i) => {
-          const rad = (a.angle * Math.PI) / 180;
-          return (
-            <div key={i} style={{
-              position: "absolute",
-              left: Math.cos(rad) * a.radius,
-              top:  Math.sin(rad) * a.radius,
-              width:  a.size, height: a.size,
-              borderRadius: "50%",
-              background: "white",
-              opacity: a.opacity,
-            }}/>
-          );
-        })}
-      </div>
+      {hasPointer && (
+        <div aria-hidden style={{
+          position: "absolute", top: "50%", left: "50%",
+          width: 0, height: 0,
+          animation: "asteroidBeltSpin 80s linear infinite",
+          pointerEvents: "none",
+          opacity: focused >= 0 ? 0.05 : hovered >= 0 ? 0.3 : 0.55,
+          transition: "opacity 0.6s ease",
+        }}>
+          {ASTEROIDS.map((a, i) => {
+            const rad = (a.angle * Math.PI) / 180;
+            return (
+              <div key={i} style={{
+                position: "absolute",
+                left: Math.cos(rad) * a.radius,
+                top:  Math.sin(rad) * a.radius,
+                width:  a.size, height: a.size,
+                borderRadius: "50%",
+                background: "white",
+                opacity: a.opacity,
+              }}/>
+            );
+          })}
+        </div>
+      )}
 
       {/* ── 3-Layer Sun ── */}
       <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 6, pointerEvents: "none" }}>
