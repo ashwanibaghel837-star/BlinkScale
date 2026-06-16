@@ -44,7 +44,7 @@ const FAR_STARS  = genStars(120, "far");
 const MID_STARS  = genStars(80, "mid");
 const NEAR_STARS = genStars(40, "near");
 
-function StarLayer({ stars, layerRef }) {
+function StarLayer({ stars, layerRef, disableTwinkle = false }) {
   return (
     <div
       ref={layerRef}
@@ -66,8 +66,8 @@ function StarLayer({ stars, layerRef }) {
               borderRadius: "50%",
               background: "white",
               opacity: s.opacity,
-              willChange: s.twinkle ? "opacity" : "auto",
-              animation: s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
+              willChange: !disableTwinkle && s.twinkle ? "opacity" : "auto",
+              animation: !disableTwinkle && s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
             }}
           />
         ))}
@@ -87,8 +87,8 @@ function StarLayer({ stars, layerRef }) {
               borderRadius: "50%",
               background: "white",
               opacity: s.opacity,
-              willChange: s.twinkle ? "opacity" : "auto",
-              animation: s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
+              willChange: !disableTwinkle && s.twinkle ? "opacity" : "auto",
+              animation: !disableTwinkle && s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
             }}
           />
         ))}
@@ -108,8 +108,8 @@ function StarLayer({ stars, layerRef }) {
               borderRadius: "50%",
               background: "white",
               opacity: s.opacity,
-              willChange: s.twinkle ? "opacity" : "auto",
-              animation: s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
+              willChange: !disableTwinkle && s.twinkle ? "opacity" : "auto",
+              animation: !disableTwinkle && s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
             }}
           />
         ))}
@@ -129,8 +129,15 @@ export default function StarField() {
 
   // Single organic shooting star state
   const [shootingStar, setShootingStar] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     // Only run mouse parallax if the device has a fine pointer (desktop with mouse)
     const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
     let onMouse = null;
@@ -204,27 +211,30 @@ export default function StarField() {
     }
 
     // ── Shooting Star Sequencer (Exactly 10s gap, 3 specific paths) ──
-    const presetShootingStars = [
-      { top: 5,  left: 10, angle: 30,  len: 160, travel: 1200, dur: 3.5 }, // TL -> BR
-      { top: 15, left: 85, angle: 150, len: 160, travel: 1200, dur: 4 },   // TR -> BL
-      { top: 80, left: 10, angle: -30, len: 140, travel: 1000, dur: 3.8 }, // BL -> TR
-    ];
-    let currentShootingIndex = 0;
-    
     let timeoutId;
-    const triggerShootingStar = () => {
-      setShootingStar(null);
-      setTimeout(() => {
-        setShootingStar(presetShootingStars[currentShootingIndex]);
-        currentShootingIndex = (currentShootingIndex + 1) % presetShootingStars.length;
-        timeoutId = setTimeout(triggerShootingStar, 10000); // exactly 10s next
-      }, 50);
-    };
-    
-    // Initial start
-    timeoutId = setTimeout(triggerShootingStar, 3000);
+    if (!isMobile) {
+      const presetShootingStars = [
+        { top: 5,  left: 10, angle: 30,  len: 160, travel: 1200, dur: 3.5 }, // TL -> BR
+        { top: 15, left: 85, angle: 150, len: 160, travel: 1200, dur: 4 },   // TR -> BL
+        { top: 80, left: 10, angle: -30, len: 140, travel: 1000, dur: 3.8 }, // BL -> TR
+      ];
+      let currentShootingIndex = 0;
+      
+      const triggerShootingStar = () => {
+        setShootingStar(null);
+        setTimeout(() => {
+          setShootingStar(presetShootingStars[currentShootingIndex]);
+          currentShootingIndex = (currentShootingIndex + 1) % presetShootingStars.length;
+          timeoutId = setTimeout(triggerShootingStar, 10000); // exactly 10s next
+        }, 50);
+      };
+      
+      // Initial start
+      timeoutId = setTimeout(triggerShootingStar, 3000);
+    }
 
     return () => {
+      window.removeEventListener("resize", checkMobile);
       if (hasFinePointer && onMouse) {
         window.removeEventListener("mousemove", onMouse);
       }
@@ -234,7 +244,7 @@ export default function StarField() {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div
@@ -254,7 +264,7 @@ export default function StarField() {
           width: "45vw", height: "45vw", borderRadius: "50%",
           background: "radial-gradient(circle, rgba(0, 87, 255, 0.22) 0%, transparent 65%)",
           filter: "blur(70px)",
-          animation: "auraDrift 16s ease-in-out infinite alternate",
+          animation: isMobile ? "none" : "auraDrift 16s ease-in-out infinite alternate",
         }} />
         
         {/* Blob 2: Silver Mist - visible early-mid scroll */}
@@ -263,26 +273,30 @@ export default function StarField() {
           width: "40vw", height: "40vw", borderRadius: "50%",
           background: "radial-gradient(circle, rgba(226, 232, 240, 0.05) 0%, transparent 60%)",
           filter: "blur(65px)",
-          animation: "auraDrift 22s ease-in-out infinite alternate-reverse",
+          animation: isMobile ? "none" : "auraDrift 22s ease-in-out infinite alternate-reverse",
         }} />
 
         {/* Blob 3: Deep Blue - visible mid scroll */}
-        <div style={{
-          position: "absolute", top: "135vh", left: "20%",
-          width: "48vw", height: "48vw", borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(0, 31, 128, 0.28) 0%, transparent 68%)",
-          filter: "blur(80px)",
-          animation: "auraDrift 20s ease-in-out infinite alternate",
-        }} />
+        {!isMobile && (
+          <div style={{
+            position: "absolute", top: "135vh", left: "20%",
+            width: "48vw", height: "48vw", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0, 31, 128, 0.28) 0%, transparent 68%)",
+            filter: "blur(80px)",
+            animation: "auraDrift 20s ease-in-out infinite alternate",
+          }} />
+        )}
 
         {/* Blob 4: Electric Blue - visible late scroll */}
-        <div style={{
-          position: "absolute", top: "210vh", right: "15%",
-          width: "42vw", height: "42vw", borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(0, 87, 255, 0.16) 0%, transparent 62%)",
-          filter: "blur(70px)",
-          animation: "auraDrift 26s ease-in-out infinite alternate-reverse",
-        }} />
+        {!isMobile && (
+          <div style={{
+            position: "absolute", top: "210vh", right: "15%",
+            width: "42vw", height: "42vw", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0, 87, 255, 0.16) 0%, transparent 62%)",
+            filter: "blur(70px)",
+            animation: "auraDrift 26s ease-in-out infinite alternate-reverse",
+          }} />
+        )}
 
         {/* Blob 5: Silver Mist - visible near bottom */}
         <div style={{
@@ -290,23 +304,25 @@ export default function StarField() {
           width: "46vw", height: "46vw", borderRadius: "50%",
           background: "radial-gradient(circle, rgba(226, 232, 240, 0.05) 0%, transparent 65%)",
           filter: "blur(75px)",
-          animation: "auraDrift 18s ease-in-out infinite alternate",
+          animation: isMobile ? "none" : "auraDrift 18s ease-in-out infinite alternate",
         }} />
 
         {/* Blob 6: Deep Blue - visible at footer */}
-        <div style={{
-          position: "absolute", top: "350vh", right: "12%",
-          width: "40vw", height: "40vw", borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(0, 31, 128, 0.24) 0%, transparent 60%)",
-          filter: "blur(60px)",
-          animation: "auraDrift 24s ease-in-out infinite alternate-reverse",
-        }} />
+        {!isMobile && (
+          <div style={{
+            position: "absolute", top: "350vh", right: "12%",
+            width: "40vw", height: "40vw", borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0, 31, 128, 0.24) 0%, transparent 60%)",
+            filter: "blur(60px)",
+            animation: "auraDrift 24s ease-in-out infinite alternate-reverse",
+          }} />
+        )}
       </div>
 
       {/* ── 3 Star Layers (Seamless looping) ── */}
-      <StarLayer stars={FAR_STARS}  layerRef={farRef}  />
-      <StarLayer stars={MID_STARS}  layerRef={midRef}  />
-      <StarLayer stars={NEAR_STARS} layerRef={nearRef} />
+      <StarLayer stars={FAR_STARS}  layerRef={farRef} disableTwinkle={isMobile} />
+      {!isMobile && <StarLayer stars={MID_STARS}  layerRef={midRef} disableTwinkle={false} />}
+      {!isMobile && <StarLayer stars={NEAR_STARS} layerRef={nearRef} disableTwinkle={false} />}
 
       {/* ── Single Shooting Star ── */}
       {shootingStar && (
