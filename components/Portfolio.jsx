@@ -73,56 +73,51 @@ export default function Portfolio() {
                       alt={project.title}
                       width={1200}
                       height={900}
-                      className="h-auto w-full scale-100 transition duration-700 ease-out group-hover:scale-105"
+                      className="h-auto w-full scale-100 transition duration-700 ease-out group-hover:scale-[1.02]"
                     />
-
-                    <div className="pointer-events-none absolute inset-0">
-                      <div className="absolute inset-x-6 top-6 flex justify-between gap-4">
-                        <span className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] uppercase tracking-[0.24em] text-blue-100/90">
-                          {project.category}
-                        </span>
-                        <span className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] uppercase tracking-[0.24em] text-slate-200">
-                          {project.impact}
-                        </span>
-                      </div>
-
-                      <div className="absolute inset-x-6 bottom-20 grid grid-cols-3 gap-3 opacity-60 transition duration-500 group-hover:translate-y-[-8px] group-hover:opacity-100">
-                        {project.metrics.map((metric, index) => (
-                          <div
-                            key={metric}
-                            className={`rounded-[18px] border border-white/10 px-3 py-3 text-[11px] uppercase tracking-[0.18em] text-white ${
-                              index === 0 ? "bg-cyan-500/[0.14]" : "bg-white/[0.05]"
-                            }`}
-                          >
-                            {metric}
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="absolute bottom-6 left-6 right-6">
-                        <div className="overflow-hidden rounded-full bg-white/[0.08]">
-                          <div className="h-1.5 w-2/3 rounded-full bg-gradient-to-r from-slate-400 via-cyan-400 to-cyan-500 transition-all duration-700 group-hover:w-[88%]" />
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
-                  <div className="relative z-10 mt-5 flex items-start justify-between gap-4">
-                    <div>
-                      <div className="text-[11px] uppercase tracking-[0.26em] text-slate-500">
-                        {project.stack.join(" • ")}
-                      </div>
-                      <h3 className="mt-3 text-2xl font-semibold text-white">
-                        {project.title}
-                      </h3>
-                      <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300">
-                        {project.spotlight}
-                      </p>
+                  <div className="relative z-10 mt-5">
+                    {/* Category & Impact Badges */}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2.5 py-0.5 text-[9px] uppercase tracking-[0.18em] text-cyan-300 font-semibold">
+                        {project.category}
+                      </span>
+                      <span className="rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-0.5 text-[9px] uppercase tracking-[0.18em] text-slate-300 font-semibold">
+                        {project.impact}
+                      </span>
                     </div>
 
-                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white transition duration-500 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 group-hover:text-cyan-100">
-                      <ArrowUpRightIcon className="h-5 w-5" />
-                    </span>
+                    {/* Tech Stack */}
+                    <div className="text-[10px] font-mono tracking-wider text-slate-500">
+                      {project.stack.join(" • ")}
+                    </div>
+
+                    {/* Title & Arrow */}
+                    <div className="mt-3 flex items-center justify-between gap-4">
+                      <h3 className="text-2xl font-semibold text-white group-hover:text-cyan-400 transition-colors duration-300">
+                        {project.title}
+                      </h3>
+                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white transition duration-300 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 group-hover:text-cyan-100 group-hover:scale-110">
+                        <ArrowUpRightIcon className="h-4 w-4" />
+                      </span>
+                    </div>
+
+                    {/* Spotlight Description */}
+                    <p className="mt-3 text-sm leading-7 text-slate-300">
+                      {project.spotlight}
+                    </p>
+
+                    {/* Premium Metrics Section inside Card */}
+                    <div className="mt-5 grid grid-cols-3 gap-2 border-t border-white/[0.06] pt-4">
+                      {project.metrics.map((metric, idx) => (
+                        <div key={metric} className="rounded-xl border border-white/[0.04] bg-white/[0.02] py-2 px-1 text-center transition-colors duration-300 group-hover:border-cyan-500/10 group-hover:bg-cyan-500/[0.02]">
+                          <span className={`block text-[10px] font-bold tracking-wide ${idx === 0 ? "text-cyan-400" : "text-slate-300"}`}>
+                            {metric}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </motion.button>
               </TiltCard>
@@ -154,15 +149,16 @@ export default function Portfolio() {
               className="glass-panel glow-frame relative z-10 max-h-[92vh] w-full max-w-6xl overflow-hidden rounded-[36px] border border-white/[0.08]"
             >
               <div className="grid max-h-[92vh] gap-0 overflow-auto lg:grid-cols-[1.1fr_0.9fr]">
-                <div className="relative min-h-[22rem] border-b border-white/[0.08] lg:min-h-full lg:border-b-0 lg:border-r">
-                  <Image
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    width={1600}
-                    height={1200}
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050814]/80 via-transparent to-transparent" />
+                <div className="relative flex min-h-[22rem] items-center justify-center border-b border-white/[0.08] bg-[#02040a]/40 p-6 sm:p-8 lg:min-h-full lg:border-b-0 lg:border-r">
+                  <div className="relative w-full overflow-hidden rounded-2xl border border-white/[0.08] bg-[#040815]/50 p-1 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                    <Image
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      width={1600}
+                      height={1200}
+                      className="h-auto w-full object-contain rounded-xl"
+                    />
+                  </div>
                 </div>
 
                 <div className="relative p-6 sm:p-8">
