@@ -239,6 +239,19 @@ export default function Portfolio() {
                         glance and more capable the longer you inspect it.
                       </p>
                     </div>
+
+                    {selectedProject.url && (
+                      <div className="mt-8">
+                        <a
+                          href={selectedProject.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="focus-ring inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-[#0057ff] to-[#2d7dff] py-3.5 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(0,87,255,0.35)] hover:shadow-[0_22px_55px_rgba(0,87,255,0.45)] transition duration-300"
+                        >
+                          Visit Live Website &rarr;
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
