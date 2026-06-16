@@ -179,28 +179,30 @@ export default function Hero() {
             </motion.div>
 
             {/* ── SOLAR SYSTEM ── */}
-            {mounted && (
-              <motion.div
-                style={{ opacity: solarOpacity, scale: solarScale, y: solarY }}
-                className="relative mx-auto mt-10 sm:mt-6 flex w-full justify-center h-[380px] sm:h-[600px] lg:h-[960px] overflow-visible"
-              >
-                {/* Responsive Scaler (Shrinks 960px fixed element to fit mobile screens) */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.38] sm:scale-[0.65] lg:scale-100">
-                  {/* Subtle 3D tilt on mouse move */}
-                  <motion.div
-                    style={{
-                      width:  SOLAR_SIZE,
-                      height: SOLAR_SIZE,
-                      ...(!reduceMotion
-                        ? { rotateX, rotateY, transformPerspective: 1200, transformStyle: "preserve-3d" }
-                        : {}),
-                    }}
-                  >
-                    <SolarSystem />
-                  </motion.div>
-                </div>
-              </motion.div>
-            )}
+            <div className="relative mx-auto mt-10 sm:mt-6 flex w-full justify-center h-[380px] sm:h-[600px] lg:h-[960px] overflow-visible">
+              {mounted && (
+                <motion.div
+                  style={{ opacity: solarOpacity, scale: solarScale, y: solarY }}
+                  className="absolute inset-0 flex w-full justify-center overflow-visible"
+                >
+                  {/* Responsive Scaler (Shrinks 960px fixed element to fit mobile screens) */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.38] sm:scale-[0.65] lg:scale-100">
+                    {/* Subtle 3D tilt on mouse move */}
+                    <motion.div
+                      style={{
+                        width:  SOLAR_SIZE,
+                        height: SOLAR_SIZE,
+                        ...(!reduceMotion
+                          ? { rotateX, rotateY, transformPerspective: 1200, transformStyle: "preserve-3d" }
+                          : {}),
+                      }}
+                    >
+                      <SolarSystem />
+                    </motion.div>
+                  </div>
+                </motion.div>
+              )}
+            </div>
 
             {/* ── CTA Buttons ── */}
             <Reveal delay={0.14} show={titleComplete}>
@@ -283,7 +285,7 @@ function Reveal({ children, delay = 0, show = true }) {
 
 // Premium Typewriter helper with organic pauses on punctuation
 function Typewriter({ text, speed = 80, delay = 400, onComplete }) {
-  const [displayedText, setDisplayedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [complete, setComplete] = useState(false);
 
   // Use a ref for onComplete to prevent infinite re-renders
@@ -293,19 +295,19 @@ function Typewriter({ text, speed = 80, delay = 400, onComplete }) {
   });
 
   useEffect(() => {
-    setDisplayedText("");
+    setCurrentIndex(0);
     setComplete(false);
 
     let timeoutId;
-    let currentIndex = 0;
 
     const startTimeout = setTimeout(() => {
+      let tempIndex = 0;
       const type = () => {
-        if (currentIndex < text.length) {
-          const char = text[currentIndex];
-          setDisplayedText(prev => prev + char);
-          currentIndex++;
-          const nextDelay = char === "." && currentIndex < text.length ? 500 : speed;
+        if (tempIndex < text.length) {
+          const char = text[tempIndex];
+          tempIndex++;
+          setCurrentIndex(tempIndex);
+          const nextDelay = char === "." && tempIndex < text.length ? 500 : speed;
           timeoutId = setTimeout(type, nextDelay);
         } else {
           setComplete(true);
@@ -321,15 +323,23 @@ function Typewriter({ text, speed = 80, delay = 400, onComplete }) {
     };
   }, [text, speed, delay]); // Clean, minimal dependencies
 
+  const displayedText = text.substring(0, currentIndex);
+  const remainingText = text.substring(currentIndex);
+
   return (
     <span className="relative">
-      {displayedText}
+      <span>{displayedText}</span>
       {!complete && (
-        <span 
-          className="inline-block w-[3px] bg-cyan-400 ml-1.5 h-[0.85em] align-middle animate-pulse"
-          style={{ animationDuration: "0.6s" }}
-        />
+        <span className="relative inline-block w-0 h-0 overflow-visible">
+          <span 
+            className="absolute left-1.5 bottom-0 w-[3px] bg-cyan-400 h-[0.85em] align-middle animate-pulse"
+            style={{ animationDuration: "0.6s", transform: "translateY(-10%)" }}
+          />
+        </span>
       )}
+      <span className="invisible select-none pointer-events-none" aria-hidden="true">
+        {remainingText}
+      </span>
     </span>
   );
 }

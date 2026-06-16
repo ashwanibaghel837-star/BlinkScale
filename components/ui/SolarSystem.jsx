@@ -381,7 +381,7 @@ export default function SolarSystem() {
             zIndex: 35,
             cursor: "pointer",
           }}
-          aria-label="Close focus"
+          role="presentation"
         />
       )}
 
@@ -592,8 +592,8 @@ export default function SolarSystem() {
               willChange: "transform, opacity",
             }}
           >
-            {/* Invisible large hitbox for reliable clicking on small/moving planets */}
-            <div
+            <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 if (focused === i) { closeFocus(); }
@@ -608,6 +608,9 @@ export default function SolarSystem() {
                 borderRadius: "50%",
                 cursor: "pointer",
                 zIndex: 2,
+                background: "transparent",
+                border: "none",
+                padding: 0,
               }}
               aria-label={`Select ${p.name} service`}
             />
