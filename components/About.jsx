@@ -60,43 +60,44 @@ export default function About() {
   return (
     <section id="about" className="section-anchor content-visibility-auto py-24 sm:py-28">
       <div className="section-shell">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
-          {/* Left: visual panel — Cosmic Data Core */}
+        <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+          {/* Left: visual panel — Browser Window Mockup */}
           <Reveal from="left">
-            <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[40px] border border-white/5 bg-[#030712] p-4 sm:p-8">
-                       {/* Deep Space Glow */}
-              <div className="absolute inset-0 bg-[radial-gradient(circle at center,rgba(0,87,255,0.15)_0%,transparent_60%)]" />
-              
-              {/* Concentric Orbit Rings */}
-              <div className="absolute h-[130%] w-[130%] animate-[spin_60s_linear_infinite] rounded-full border border-white/[0.03] border-t-white/[0.1] border-b-cyan-500/[0.2]" />
-              <div className="absolute h-[85%] w-[85%] animate-[spin_40s_linear_infinite_reverse] rounded-full border border-blue-500/[0.05] border-r-blue-400/[0.25]" />
-              <div className="absolute h-[50%] w-[50%] animate-[spin_20s_linear_infinite] rounded-full border border-slate-500/[0.08] border-l-slate-400/[0.15] border-dashed" />
-              
-              {/* The Core Image */}
-              <div className="glow-frame float-card-slow relative z-10 w-full overflow-hidden rounded-[36px] bg-[#02040c]/50 p-2 shadow-[0_0_60px_rgba(0,87,255,0.15)] backdrop-blur-md">
+            <div className="relative">
+              {/* Floating backdrop glow */}
+              <div className="absolute -inset-4 bg-gradient-to-tr from-[#0057ff]/15 via-[#2d7dff]/5 to-transparent rounded-[40px] blur-3xl opacity-75" />
+
+              {/* Browser Mockup */}
+              <div className="glow-frame float-card-slow relative z-10 overflow-hidden rounded-[30px] border border-white/[0.08] bg-[#02040c]/40 p-2.5 shadow-[0_24px_60px_rgba(0,87,255,0.12)] backdrop-blur-md">
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-white/[0.02] rounded-t-[20px]">
+                  <div className="h-2 w-2 rounded-full bg-red-500/60" />
+                  <div className="h-2 w-2 rounded-full bg-yellow-500/60" />
+                  <div className="h-2 w-2 rounded-full bg-green-500/60" />
+                  <div className="ml-4 text-[9px] font-mono text-slate-500 tracking-wider">bizzvector.com/systems-sync</div>
+                </div>
                 <Image
                   src="/about-pic.png"
-                  alt="BizzVector Team and Systems"
+                  alt="BizzVector Core Systems"
                   width={1200}
                   height={900}
                   priority
-                  className="h-auto w-full object-cover rounded-[28px] opacity-95 transition-transform duration-700 hover:scale-105"
+                  className="h-auto w-full rounded-b-[20px] object-cover opacity-95 transition-transform duration-700 hover:scale-[1.01]"
                 />
               </div>
 
               {/* Floating HUD Elements */}
-              <div data-gravity className="absolute left-[5%] top-[15%] z-20 rounded-2xl border border-cyan-400/20 bg-black/40 p-3 shadow-[0_0_20px_rgba(0,87,255,0.1)] backdrop-blur-md transition-colors hover:border-cyan-400/50">
-                <div className="text-[10px] font-mono tracking-widest text-cyan-400">SYS.SYNC</div>
-                <div className="mt-2 flex gap-1.5">
+              <div className="absolute -left-6 top-[20%] z-20 rounded-2xl border border-cyan-400/20 bg-black/50 p-3 shadow-[0_0_30px_rgba(0,87,255,0.15)] backdrop-blur-md hidden md:block hover:border-cyan-400/40 transition-colors">
+                <div className="text-[9px] font-mono tracking-widest text-cyan-400">SYS.SYNC</div>
+                <div className="mt-2 flex gap-1">
                   <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400" />
                   <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400/40" style={{ animationDelay: '0.2s' }} />
                   <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400/20" style={{ animationDelay: '0.4s' }} />
                 </div>
               </div>
 
-              <div data-gravity className="absolute bottom-[15%] right-[5%] z-20 rounded-2xl border border-slate-500/20 bg-black/40 p-4 shadow-[0_0_20px_rgba(200,200,220,0.06)] backdrop-blur-md transition-colors hover:border-slate-400/40">
-                <div className="text-[10px] font-mono tracking-widest text-slate-400">UPTIME</div>
-                <div className="mt-1 font-mono text-sm font-bold text-white tracking-wider">99.99%</div>
+              <div className="absolute -right-6 bottom-[15%] z-20 rounded-2xl border border-white/10 bg-black/50 p-4 shadow-[0_0_30px_rgba(255,255,255,0.05)] backdrop-blur-md hidden md:block hover:border-white/20 transition-colors">
+                <div className="text-[9px] font-mono tracking-widest text-slate-400">UPTIME</div>
+                <div className="mt-1 font-mono text-xs font-bold text-white tracking-wider">99.99%</div>
               </div>
             </div>
           </Reveal>
@@ -129,20 +130,22 @@ export default function About() {
                 </Reveal>
               ))}
             </div>
-
-            {/* Trust Badges — replaces numerical stats */}
-            <Reveal delay={0.22}>
-              <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {trustPillars.map((pillar) => (
-                  <TrustCard
-                    key={pillar.title}
-                    title={pillar.title}
-                    description={pillar.description}
-                  />
-                ))}
-              </div>
-            </Reveal>
           </div>
+        </div>
+
+        {/* Bottom Section: Trust Pillars Grid (Spans Full Width to Balance Spacing) */}
+        <div className="mt-20 border-t border-white/[0.06] pt-16">
+          <Reveal delay={0.2}>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {trustPillars.map((pillar) => (
+                <TrustCard
+                  key={pillar.title}
+                  title={pillar.title}
+                  description={pillar.description}
+                />
+              ))}
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
