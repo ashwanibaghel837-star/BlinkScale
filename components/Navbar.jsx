@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { BrandMark } from "@/components/ui/Icons";
 import useSafeReducedMotion from "@/components/ui/useSafeReducedMotion";
@@ -57,9 +58,12 @@ export default function Navbar() {
             className="focus-ring flex flex-col items-center gap-0.5 rounded-2xl py-0.5 px-2"
             aria-label="BizzVector home"
           >
-            <img
+            <Image
               src="/logo.png"
               alt="BizzVector Logo"
+              width={140}
+              height={56}
+              priority
               className="h-12 md:h-14 w-auto object-contain"
             />
             <div className="font-display text-[10px] md:text-xs font-bold tracking-[0.16em] uppercase">

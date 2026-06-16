@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { services } from "@/lib/content";
 import {
   BrandMark,
@@ -30,9 +31,11 @@ export default function Footer() {
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
           <div>
             <div className="inline-flex items-center gap-3">
-              <img
+              <Image
                 src="/logo.png"
                 alt="BizzVector Logo"
+                width={120}
+                height={48}
                 className="h-12 w-auto object-contain"
               />
               <div>

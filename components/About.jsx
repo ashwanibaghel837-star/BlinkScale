@@ -43,7 +43,7 @@ function TrustCard({ title, description }) {
           <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-400/10 text-cyan-300 border border-cyan-400/20 text-xs font-semibold">
             ✓
           </span>
-          <h4 className="font-display text-base font-semibold text-white tracking-tight">{title}</h4>
+          <h3 className="font-display text-base font-semibold text-white tracking-tight">{title}</h3>
         </div>
         <p className="mt-3 text-[13px] leading-6 text-slate-300">{description}</p>
       </div>

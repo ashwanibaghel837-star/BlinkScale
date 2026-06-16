@@ -175,7 +175,6 @@ export default function Hero() {
 
             {/* ── SOLAR SYSTEM ── */}
             <motion.div
-              aria-hidden="true"
               style={{ opacity: solarOpacity, scale: solarScale, y: solarY }}
               className="relative mx-auto mt-10 sm:mt-6 flex w-full justify-center h-[380px] sm:h-[600px] lg:h-[960px] overflow-visible"
             >
