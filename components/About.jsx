@@ -73,14 +73,14 @@ export default function About() {
               <div className="absolute h-[50%] w-[50%] animate-[spin_20s_linear_infinite] rounded-full border border-slate-500/[0.08] border-l-slate-400/[0.15] border-dashed" />
               
               {/* The Core Image */}
-              <div className="glow-frame float-card-slow relative z-10 w-3/4 overflow-hidden rounded-[36px] bg-[#02040c]/50 p-4 shadow-[0_0_60px_rgba(0,87,255,0.15)] backdrop-blur-md">
+              <div className="glow-frame float-card-slow relative z-10 w-full overflow-hidden rounded-[36px] bg-[#02040c]/50 p-2 shadow-[0_0_60px_rgba(0,87,255,0.15)] backdrop-blur-md">
                 <Image
-                  src="/about-orbit.svg"
-                  alt="Abstract BizzVector systems illustration"
+                  src="/about-pic.png"
+                  alt="BizzVector Team and Systems"
                   width={1200}
                   height={900}
                   priority
-                  className="h-auto w-full object-cover mix-blend-screen opacity-90 transition-transform duration-700 hover:scale-105"
+                  className="h-auto w-full object-cover rounded-[28px] opacity-95 transition-transform duration-700 hover:scale-105"
                 />
               </div>
 
