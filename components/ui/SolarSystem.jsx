@@ -57,8 +57,8 @@ const PLANETS = [
   // perihelion = 348*0.74 = 257.5px ✓  aphelion = 348*1.26 = 438.5px < 480 ✓
 
   { name: "R & D",    a: 390, ecc: 0.20, size: 14, speed: 0.11, tilt: 9,
-    gradient: "radial-gradient(circle at 34% 32%, #cffafe, #22d3ee 46%, #164e63)",
-    glow: "34,211,238", highlight: "rgba(207,250,254,0.35)" },
+    gradient: "radial-gradient(circle at 34% 32%, #e6f0ff, #0057ff 46%, #001a4d)",
+    glow: "0,87,255", highlight: "rgba(230,240,255,0.35)" },
   // perihelion = 390*0.80 = 312px ✓  aphelion = 390*1.20 = 468px < 480 ✓
 
   { name: "Data",     a: 420, ecc: 0.12, size: 13, speed: 0.10, tilt: -4,
@@ -88,7 +88,7 @@ const PLANET_INFO = {
   "Backend":   { service: "Backend Systems",        icon: "⚙️", desc: "Robust APIs, databases, and server logic.", color: "248,113,113" },
   "Cloud":     { service: "Cloud Infrastructure",  icon: "☁️", desc: "Scalable cloud-native deployment pipelines.", color: "217,119,6" },
   "DevOps":    { service: "DevOps & Automation",   icon: "🔄", desc: "CI/CD, monitoring and smooth deployments.", color: "234,179,8" },
-  "R & D":     { service: "Research & Development", icon: "🔬", desc: "Experimental tech that becomes your edge.", color: "34,211,238" },
+  "R & D":     { service: "Research & Development", icon: "🔬", desc: "Experimental tech that becomes your edge.", color: "0,87,255" },
   "Data":      { service: "Data & Analytics",      icon: "📊", desc: "Insights and intelligence from your data.", color: "129,140,248" },
 };
 
@@ -402,7 +402,7 @@ export default function SolarSystem() {
         {/* Clickable invisible overlay on the sun — opens A.I. card */}
         <button
           onClick={(e) => { e.stopPropagation(); setSunFocused(f => !f); setFocused(-1); focusedRef.current = -1; }}
-          aria-label="Learn about AI at BlinkScale"
+          aria-label="Learn about AI at BizzVector"
           style={{
             position: "absolute", top: "50%", left: "50%",
             transform: "translate(-50%, -50%)",
@@ -446,7 +446,7 @@ export default function SolarSystem() {
           </div>
 
           <p style={{ fontSize: 13, lineHeight: 1.65, color: "rgba(230,210,160,0.88)", margin: 0 }}>
-            AI is the gravitational force at the center of BlinkScale. Every service — from Frontend to Data — is powered, accelerated, and made smarter by artificial intelligence.
+            AI is the gravitational force at the center of BizzVector. Every service — from Frontend to Data — is powered, accelerated, and made smarter by artificial intelligence.
           </p>
 
           <a href="#services" onClick={closeSun} style={{ display: "inline-block", marginTop: 16, padding: "8px 18px", borderRadius: 30, background: "rgba(253,200,50,0.12)", border: "1px solid rgba(253,200,50,0.5)", color: "rgba(253,220,60,1)", fontSize: 12, fontWeight: 600, textDecoration: "none", letterSpacing: "0.08em" }}>

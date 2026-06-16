@@ -11,13 +11,26 @@ module.exports = {
         ink: "#050814",
         mist: "#95a4c4",
         line: "rgba(255, 255, 255, 0.08)",
+        cyan: {
+          50: "#e6f0ff",
+          100: "#cce0ff",
+          200: "#99c2ff",
+          300: "#66a3ff",
+          400: "#2d7dff", // Lighter Electric Blue
+          500: "#0057ff", // Electric Blue
+          600: "#004ecc",
+          700: "#003a99",
+          800: "#002666",
+          900: "#001333",
+          950: "#000a1a",
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
         display: ["var(--font-poppins)", "sans-serif"],
       },
       boxShadow: {
-        glow: "0 24px 80px rgba(94, 115, 255, 0.26)",
+        glow: "0 24px 80px rgba(0, 87, 255, 0.26)",
         panel: "0 24px 80px rgba(5, 8, 20, 0.42)",
       },
       backgroundImage: {

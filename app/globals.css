@@ -14,9 +14,9 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 10% 14%, rgba(56, 113, 255, 0.22), transparent 26%),
-    radial-gradient(circle at 82% 12%, rgba(110, 88, 255, 0.2), transparent 24%),
-    radial-gradient(circle at 50% 72%, rgba(32, 182, 255, 0.12), transparent 30%),
+    radial-gradient(circle at 10% 14%, rgba(0, 87, 255, 0.18), transparent 26%),
+    radial-gradient(circle at 82% 12%, rgba(226, 232, 240, 0.06), transparent 24%),
+    radial-gradient(circle at 50% 72%, rgba(0, 87, 255, 0.1), transparent 30%),
     linear-gradient(180deg, #03050c 0%, #060a16 38%, #080d1c 70%, #050814 100%);
   color: #f7f9ff;
 }
@@ -41,15 +41,15 @@ body::after {
   inset: -10%;
   pointer-events: none;
   background:
-    radial-gradient(circle at 16% 18%, rgba(70, 123, 255, 0.18), transparent 24%),
-    radial-gradient(circle at 78% 22%, rgba(129, 90, 255, 0.14), transparent 22%),
-    radial-gradient(circle at 66% 74%, rgba(40, 169, 255, 0.12), transparent 24%);
+    radial-gradient(circle at 16% 18%, rgba(0, 87, 255, 0.15), transparent 24%),
+    radial-gradient(circle at 78% 22%, rgba(226, 232, 240, 0.05), transparent 22%),
+    radial-gradient(circle at 66% 74%, rgba(0, 87, 255, 0.08), transparent 24%);
   filter: blur(34px);
   opacity: 0.42;
 }
 
 ::selection {
-  background: rgba(111, 135, 255, 0.35);
+  background: rgba(0, 87, 255, 0.35);
   color: #ffffff;
 }
 
@@ -86,12 +86,12 @@ body::after {
       0 32px 100px rgba(4, 7, 18, 0.55),
       0 0 0 1px rgba(255, 255, 255, 0.03),
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      inset 0 -16px 46px rgba(26, 42, 96, 0.14);
+      inset 0 -16px 46px rgba(0, 87, 255, 0.06);
     backdrop-filter: blur(18px);
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, #fbfdff 0%, #c9d4ff 50%, #96aaf9 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 35%, #0057ff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -132,21 +132,21 @@ body::after {
   inset: 10% auto auto 6%;
   width: 22rem;
   height: 22rem;
-  background: radial-gradient(circle, rgba(94, 130, 255, 0.48), transparent 68%);
+  background: radial-gradient(circle, rgba(0, 87, 255, 0.35), transparent 68%);
 }
 
 .hero-blob-two {
   inset: auto 12% 14% auto;
   width: 26rem;
   height: 26rem;
-  background: radial-gradient(circle, rgba(122, 92, 255, 0.44), transparent 70%);
+  background: radial-gradient(circle, rgba(226, 232, 240, 0.06), transparent 70%);
 }
 
 .hero-blob-three {
   inset: auto auto 8% 28%;
   width: 18rem;
   height: 18rem;
-  background: radial-gradient(circle, rgba(28, 188, 255, 0.26), transparent 68%);
+  background: radial-gradient(circle, rgba(0, 87, 255, 0.15), transparent 68%);
 }
 
 .hero-grid {
@@ -162,7 +162,7 @@ body::after {
     0 0 0 1px rgba(255, 255, 255, 0.05),
     0 20px 70px rgba(9, 14, 28, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -20px 30px rgba(70, 97, 255, 0.08);
+    inset 0 -20px 30px rgba(0, 87, 255, 0.06);
 }
 
 .section-flow-fade {

@@ -7,11 +7,12 @@ import { BrandMark } from "@/components/ui/Icons";
 import useSafeReducedMotion from "@/components/ui/useSafeReducedMotion";
 
 const navItems = [
-  { label: "Services", href: "#services" },
-  { label: "About",    href: "#about" },
-  { label: "Process",  href: "#process" },
-  { label: "Work",     href: "#portfolio" },
-  { label: "Reviews",  href: "#testimonials" },
+  { label: "Services",   href: "#services" },
+  { label: "About",      href: "#about" },
+  { label: "Why Us",     href: "#why-choose-us" },
+  { label: "Process",    href: "#process" },
+  { label: "Work",       href: "#portfolio" },
+  { label: "Industries", href: "#industries" },
 ];
 
 export default function Navbar() {
@@ -48,22 +49,22 @@ export default function Navbar() {
                   }
           }
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="glass-panel flex items-center justify-between rounded-full px-4 py-3 sm:px-5"
+          className="glass-panel flex items-center justify-between rounded-full px-4 py-1.5 sm:px-5"
           style={{ border: "1px solid rgba(255,255,255,0.08)" }}
         >
           <a
             href="#hero"
-            className="focus-ring inline-flex items-center gap-3 rounded-full"
-            aria-label="BlinkScale home"
+            className="focus-ring flex flex-col items-center gap-0.5 rounded-2xl py-0.5 px-2"
+            aria-label="BizzVector home"
           >
-            <BrandMark className="h-10 w-10" />
-            <div>
-              <div className="font-display text-base font-semibold text-white">
-                BlinkScale
-              </div>
-              <div className="text-xs uppercase tracking-[0.24em] text-slate-400">
-                IT Studio
-              </div>
+            <img
+              src="/logo.png"
+              alt="BizzVector Logo"
+              className="h-12 md:h-14 w-auto object-contain"
+            />
+            <div className="font-display text-[10px] md:text-xs font-bold tracking-[0.16em] uppercase">
+              <span className="text-slate-300">Bizz</span>
+              <span className="text-cyan-500">Vector</span>
             </div>
           </a>
 
@@ -81,12 +82,15 @@ export default function Navbar() {
 
           <div className="flex items-center gap-3">
             <a
-              href="mailto:hello@blinkscale.studio"
+              href="#contact"
               className="focus-ring hidden rounded-full px-3 py-2 text-sm text-slate-300 transition-colors duration-300 hover:text-white md:inline-flex"
             >
-              hello@blinkscale.studio
+              Contact
             </a>
-            <MagneticButton href="#contact" variant="secondary">
+            <MagneticButton href="#portfolio" variant="secondary" className="hidden sm:inline-flex">
+              View Our Work
+            </MagneticButton>
+            <MagneticButton href="#contact" variant="primary">
               Start a Project
             </MagneticButton>
           </div>

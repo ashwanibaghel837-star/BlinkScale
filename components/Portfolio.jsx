@@ -42,9 +42,9 @@ export default function Portfolio() {
         <div className="section-shell">
           <Reveal>
             <SectionHeading
-              eyebrow="Selected Work"
-              title="A portfolio that feels less like a gallery and more like opening living product surfaces."
-              description="Each project card carries a little internal motion, shifting glow, and a deeper preview on click so the work feels tangible before the conversation even starts."
+              eyebrow="Portfolio"
+              title="Featured Projects"
+              description="A look at what we've built, ranging from custom restaurant systems to interactive digital agency showcases and upcoming client platforms."
             />
           </Reveal>
 
@@ -59,7 +59,7 @@ export default function Portfolio() {
                   className="glass-panel glow-frame group relative block h-full w-full overflow-hidden rounded-[34px] p-4 text-left"
                 >
                   <div
-                    className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(76,138,255,0.18),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(127,94,255,0.18),transparent_34%)] opacity-60 transition duration-500 group-hover:opacity-100"
+                    className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,87,255,0.18),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(226,232,240,0.06),transparent_34%)] opacity-60 transition duration-500 group-hover:opacity-100"
                     aria-hidden="true"
                   />
                   <div
@@ -91,7 +91,7 @@ export default function Portfolio() {
                           <div
                             key={metric}
                             className={`rounded-[18px] border border-white/10 px-3 py-3 text-[11px] uppercase tracking-[0.18em] text-white ${
-                              index === 0 ? "bg-blue-500/[0.14]" : "bg-white/[0.05]"
+                              index === 0 ? "bg-cyan-500/[0.14]" : "bg-white/[0.05]"
                             }`}
                           >
                             {metric}
@@ -101,7 +101,7 @@ export default function Portfolio() {
 
                       <div className="absolute bottom-6 left-6 right-6">
                         <div className="overflow-hidden rounded-full bg-white/[0.08]">
-                          <div className="h-1.5 w-2/3 rounded-full bg-gradient-to-r from-blue-300 via-blue-400 to-violet-400 transition-all duration-700 group-hover:w-[88%]" />
+                          <div className="h-1.5 w-2/3 rounded-full bg-gradient-to-r from-slate-400 via-cyan-400 to-cyan-500 transition-all duration-700 group-hover:w-[88%]" />
                         </div>
                       </div>
                     </div>
@@ -120,7 +120,7 @@ export default function Portfolio() {
                       </p>
                     </div>
 
-                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white transition duration-500 group-hover:border-blue-300/30 group-hover:bg-blue-400/10 group-hover:text-blue-100">
+                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white transition duration-500 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 group-hover:text-cyan-100">
                       <ArrowUpRightIcon className="h-5 w-5" />
                     </span>
                   </div>
@@ -167,7 +167,7 @@ export default function Portfolio() {
 
                 <div className="relative p-6 sm:p-8">
                   <div
-                    className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(83,128,255,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(125,92,255,0.16),transparent_34%)]"
+                    className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,87,255,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(226,232,240,0.05),transparent_34%)]"
                     aria-hidden="true"
                   />
                   <div className="relative z-10">
@@ -220,7 +220,7 @@ export default function Portfolio() {
                           key={metric}
                           className={`rounded-[22px] border px-4 py-4 text-sm text-white ${
                             index === 0
-                              ? "border-blue-300/20 bg-blue-400/10"
+                              ? "border-cyan-500/20 bg-cyan-500/10"
                               : "border-white/[0.08] bg-white/[0.04]"
                           }`}
                         >

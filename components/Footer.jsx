@@ -9,8 +9,10 @@ import {
 const footerLinks = [
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
+  { label: "Why Us", href: "#why-choose-us" },
   { label: "Process", href: "#process" },
-  { label: "Portfolio", href: "#portfolio" },
+  { label: "Work", href: "#portfolio" },
+  { label: "Industries", href: "#industries" },
 ];
 
 const socialLinks = [
@@ -28,19 +30,23 @@ export default function Footer() {
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
           <div>
             <div className="inline-flex items-center gap-3">
-              <BrandMark className="h-12 w-12" />
+              <img
+                src="/logo.png"
+                alt="BizzVector Logo"
+                className="h-12 w-auto object-contain"
+              />
               <div>
-                <div className="font-display text-lg font-semibold text-white">
-                  BlinkScale
+                <div className="font-display text-base font-bold uppercase tracking-[0.16em]">
+                  <span className="text-slate-300">Bizz</span>
+                  <span className="text-cyan-500">Vector</span>
                 </div>
-                <div className="text-xs uppercase tracking-[0.24em] text-slate-400">
-                  IT Studio
+                <div className="text-[10px] uppercase tracking-[0.24em] text-slate-400 mt-0.5">
+                  Build. Automate. Scale.
                 </div>
               </div>
             </div>
             <p className="mt-5 max-w-sm text-sm leading-7 text-slate-400">
-              Premium digital products, modern software systems, reliable IT
-              support, and thoughtful business technology consultation.
+              Custom Software • AI Solutions • Business Automation • Websites
             </p>
           </div>
 
@@ -80,16 +86,16 @@ export default function Footer() {
             </div>
             <div className="mt-4 space-y-3 text-sm text-slate-300">
               <a
-                href="mailto:hello@blinkscale.studio"
+                href="mailto:contact@bizzvector.com"
                 className="focus-ring block rounded-full transition-colors duration-300 hover:text-white"
               >
-                hello@blinkscale.studio
+                contact@bizzvector.com
               </a>
               <a
-                href="tel:+919999999999"
+                href="tel:+919027872803"
                 className="focus-ring block rounded-full transition-colors duration-300 hover:text-white"
               >
-                +91 99999 99999
+                +91 90278 72803
               </a>
             </div>
             <div className="mt-6 flex items-center gap-3">
@@ -114,7 +120,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-white/[0.08] pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {launchYear} BlinkScale. Crafted for ambitious brands.</p>
+          <p>© {launchYear} BizzVector. Crafted for growing businesses.</p>
           <p>Built with Next.js, Tailwind CSS, and Framer Motion.</p>
         </div>
       </div>

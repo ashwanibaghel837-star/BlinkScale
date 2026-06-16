@@ -6,11 +6,11 @@ import useSafeReducedMotion from "@/components/ui/useSafeReducedMotion";
 
 const variants = {
   primary:
-    "bg-gradient-to-r from-blue-500 via-blue-400 to-indigo-400 text-slate-950 shadow-[0_18px_40px_rgba(74,124,255,0.35)] hover:shadow-[0_22px_55px_rgba(74,124,255,0.45)]",
+    "bg-gradient-to-r from-[#0057ff] to-[#2d7dff] text-white shadow-[0_18px_40px_rgba(0,87,255,0.35)] hover:shadow-[0_22px_55px_rgba(0,87,255,0.45)]",
   secondary:
-    "border border-white/[0.12] bg-white/[0.06] text-white hover:border-blue-300/30 hover:bg-blue-400/10",
+    "border border-white/[0.12] bg-white/[0.06] text-white hover:border-cyan-500/30 hover:bg-cyan-500/10",
   ghost:
-    "border border-white/[0.12] bg-transparent text-white hover:border-blue-300/30 hover:bg-white/[0.05]",
+    "border border-white/[0.12] bg-transparent text-white hover:border-cyan-500/30 hover:bg-white/[0.05]",
 };
 
 /**

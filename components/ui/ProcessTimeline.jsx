@@ -13,7 +13,7 @@ export default function ProcessTimeline({ steps }) {
       {/* ── Left sticky panel ── */}
       <div className="glass-panel glow-frame relative overflow-hidden rounded-[34px] px-6 py-8 sm:px-8 sm:py-10 xl:sticky xl:top-24 xl:self-start">
         <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(84,128,255,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(124,96,255,0.14),transparent_36%)]"
+          className="absolute inset-0 bg-[radial-gradient(circle at top left,rgba(0,87,255,0.15),transparent_34%),radial-gradient(circle at bottom right,rgba(226,232,240,0.06),transparent_36%)]"
           aria-hidden="true"
         />
         <div className="relative z-10">
@@ -54,9 +54,9 @@ export default function ProcessTimeline({ steps }) {
         >
           <defs>
             <linearGradient id="flow-grad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.6" />
-              <stop offset="60%" stopColor="#c4b5fd" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#c4b5fd" stopOpacity="0" />
+              <stop offset="0%" stopColor="#0057ff" stopOpacity="0.6" />
+              <stop offset="60%" stopColor="#e2e8f0" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#e2e8f0" stopOpacity="0" />
             </linearGradient>
           </defs>
           <motion.path
@@ -93,7 +93,7 @@ export default function ProcessTimeline({ steps }) {
               />
               {/* Timeline dot */}
               <div
-                className="absolute left-[-0.45rem] top-10 hidden h-4 w-4 rounded-full border border-blue-200/50 bg-[#9ab3ff] shadow-[0_0_24px_rgba(122,146,255,0.6)] sm:block"
+                className="absolute left-[-0.45rem] top-10 hidden h-4 w-4 rounded-full border border-blue-400/40 bg-[#0057ff] shadow-[0_0_24px_rgba(0,87,255,0.6)] sm:block"
                 aria-hidden="true"
               />
 

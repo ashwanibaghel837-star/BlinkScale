@@ -19,16 +19,14 @@ const iconMap = {
   software:     CodeIcon,
   support:      SupportIcon,
   hardware:     ChipIcon,
-  consultation: StrategyIcon,
 };
 
 // Unique nebula gradient per service — each card is a mini galaxy cluster
 const nebulaMap = {
-  website:      "radial-gradient(ellipse at 30% 20%, rgba(100,80,255,0.22) 0%, rgba(60,60,200,0.08) 45%, transparent 72%)",
-  software:     "radial-gradient(ellipse at 70% 15%, rgba(20,200,200,0.20) 0%, rgba(20,160,180,0.08) 45%, transparent 72%)",
-  support:      "radial-gradient(ellipse at 40% 25%, rgba(255,80,160,0.18) 0%, rgba(220,60,140,0.07) 45%, transparent 72%)",
-  hardware:     "radial-gradient(ellipse at 60% 20%, rgba(255,180,40,0.18) 0%, rgba(220,150,20,0.07) 45%, transparent 72%)",
-  consultation: "radial-gradient(ellipse at 35% 20%, rgba(40,140,255,0.22) 0%, rgba(20,100,240,0.08) 45%, transparent 72%)",
+  website:      "radial-gradient(ellipse at 30% 20%, rgba(0,87,255,0.22) 0%, rgba(0,87,255,0.08) 45%, transparent 72%)",
+  software:     "radial-gradient(ellipse at 70% 15%, rgba(226,232,240,0.06) 0%, rgba(226,232,240,0.02) 45%, transparent 72%)",
+  support:      "radial-gradient(ellipse at 40% 25%, rgba(0,87,255,0.22) 0%, rgba(0,87,255,0.08) 45%, transparent 72%)",
+  hardware:     "radial-gradient(ellipse at 60% 20%, rgba(226,232,240,0.06) 0%, rgba(226,232,240,0.02) 45%, transparent 72%)",
 };
 
 export default function Services() {
@@ -52,13 +50,13 @@ export default function Services() {
           <div className="glass-panel glow-frame rounded-[36px] px-5 py-8 sm:px-8 sm:py-10">
             <SectionHeading
               eyebrow="Services"
-              title="Services that emerge as a system, not a pile of disconnected deliverables."
-              description="Hover through the stack and the experience expands. Each capability is designed to feel like part of one fluid operating model."
+              title="What We Do"
+              description="We build modular, integrated solutions that grow alongside your business. Hover through our capabilities to see how we help businesses work smarter."
             />
           </div>
         </Reveal>
 
-        <div className="mt-8 grid gap-4 lg:grid-cols-6">
+        <div className="mt-8 grid gap-4 lg:grid-cols-5">
           {services.map((service, index) => {
             const Icon = iconMap[service.icon];
             const isActive   = activeIndex === index;
@@ -79,9 +77,9 @@ export default function Services() {
                       className="pointer-events-none absolute inset-0 rounded-[30px]"
                       animate={{
                         boxShadow: [
-                          "0 0 0px 0px rgba(80,120,255,0)",
-                          "0 0 28px 4px rgba(80,120,255,0.35)",
-                          "0 0 0px 0px rgba(80,120,255,0)",
+                          "0 0 0px 0px rgba(0, 87, 255, 0)",
+                          "0 0 28px 4px rgba(0, 87, 255, 0.35)",
+                          "0 0 0px 0px rgba(0, 87, 255, 0)",
                         ],
                       }}
                       transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
@@ -109,7 +107,7 @@ export default function Services() {
                     tabIndex={0}
                     className={`group glow-frame relative flex h-full min-h-[300px] cursor-pointer flex-col overflow-hidden rounded-[30px] border p-6 transition-[border-color,background-color] duration-300 ease-out ${
                       isActive
-                        ? "border-blue-300/20 bg-[#09111f]/[0.9] shadow-[0_22px_60px_rgba(45,86,210,0.18)]"
+                        ? "border-cyan-500/20 bg-[#09111f]/[0.9] shadow-[0_22px_60px_rgba(0,87,255,0.18)]"
                         : "border-white/[0.08] bg-[#09111f]/[0.78] hover:border-white/15"
                     }`}
                   >
@@ -141,7 +139,7 @@ export default function Services() {
                       aria-hidden="true"
                     />
                     <div
-                      className={`pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent transition-opacity duration-300 ${
+                      className={`pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent transition-opacity duration-300 ${
                         isActive ? "opacity-100" : "opacity-0"
                       }`}
                       aria-hidden="true"
@@ -152,7 +150,7 @@ export default function Services() {
                         {/* Icon with gravity — attracted to cursor */}
                         <div
                           data-gravity
-                          className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] text-blue-100 shadow-[0_0_30px_rgba(80,126,255,0.18)] transition duration-500 group-hover:border-blue-300/30 group-hover:bg-blue-400/10 group-hover:shadow-[0_0_50px_rgba(80,126,255,0.26)]"
+                          className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] text-slate-100 shadow-[0_0_30px_rgba(0,87,255,0.18)] transition duration-500 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 group-hover:shadow-[0_0_50px_rgba(0,87,255,0.26)]"
                         >
                           <Icon className="h-6 w-6" />
                         </div>
@@ -160,7 +158,7 @@ export default function Services() {
                           <div className="text-[11px] uppercase tracking-[0.26em] text-slate-500">
                             0{index + 1}
                           </div>
-                          <div className="mt-2 text-xs uppercase tracking-[0.26em] text-blue-100/75">
+                          <div className="mt-2 text-xs uppercase tracking-[0.26em] text-slate-300">
                             {service.stat}
                           </div>
                         </div>

@@ -5,16 +5,16 @@
   <rect x="84" y="74" width="1032" height="482" rx="32" fill="url(#panel)" />
   <rect x="124" y="114" width="952" height="402" rx="28" fill="#08111E"/>
   <text x="130" y="220" fill="white" font-family="Poppins, Arial, sans-serif" font-size="68" font-weight="700">
-    BlinkScale
+    BizzVector
   </text>
   <text x="130" y="312" fill="#D8E1FF" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="600">
-    Digital Experiences That Feel Alive
+    Build. Automate. Scale.
   </text>
   <text x="130" y="392" fill="#A9B7DA" font-family="Inter, Arial, sans-serif" font-size="28">
-    Premium IT company website built with Next.js, Tailwind CSS, and
+    Custom software, AI solutions, business automation, and professional
   </text>
   <text x="130" y="430" fill="#A9B7DA" font-family="Inter, Arial, sans-serif" font-size="28">
-    Framer Motion for a fast, modern, high-conversion presence.
+    websites built to help businesses work smarter and grow faster.
   </text>
   <defs>
     <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(234 148) rotate(90) scale(180)">

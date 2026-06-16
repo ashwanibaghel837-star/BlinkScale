@@ -7,22 +7,25 @@ import Portfolio from "@/components/Portfolio";
 import Process from "@/components/Process";
 import Services from "@/components/Services";
 import Testimonials from "@/components/Testimonials";
+import WhyChooseUs from "@/components/WhyChooseUs";
+import Industries from "@/components/Industries";
+import FutureOfBusiness from "@/components/FutureOfBusiness";
 
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "BlinkScale",
+  name: "BizzVector",
   description:
-    "BlinkScale creates websites, software, IT support systems, hardware sourcing journeys, and consultation-driven digital experiences.",
-  url: "https://blinkscale.example",
-  email: "hello@blinkscale.studio",
+    "BizzVector helps businesses grow faster through websites, custom software, AI solutions and business automation systems.",
+  url: "https://bizzvector.com",
+  email: "contact@bizzvector.com",
   areaServed: "Worldwide",
   knowsAbout: [
     "Website Development",
     "Software Development",
-    "IT Support Services",
-    "Hardware Supply",
-    "Business Consultation",
+    "Business Automation",
+    "AI Solutions",
+    "Digital Presence",
   ],
 };
 
@@ -39,9 +42,12 @@ export default function HomePage() {
           <Hero />
           <Services />
           <About />
+          <WhyChooseUs />
           <Process />
           <Portfolio />
+          <Industries />
           <Testimonials />
+          <FutureOfBusiness />
           <FinalCta />
         </main>
         <Footer />

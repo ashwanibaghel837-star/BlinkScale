@@ -19,28 +19,29 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://blinkscale.example"),
+  metadataBase: new URL("https://bizzvector.com"),
   title: {
-    default: "BlinkScale | Digital Experiences That Feel Alive",
-    template: "%s | BlinkScale",
+    default: "BizzVector | Build. Automate. Scale.",
+    template: "%s | BizzVector",
   },
   description:
-    "BlinkScale designs websites, software systems, IT support flows, and consultation-led technology experiences for ambitious brands.",
+    "We help businesses grow faster through websites, custom software, AI solutions and business automation systems.",
   keywords: [
     "IT company website",
     "website development",
     "software development",
-    "IT support",
-    "hardware supply",
-    "business consultation",
+    "business automation",
+    "AI solutions",
+    "WhatsApp automation",
+    "BizzVector",
     "Next.js landing page",
   ],
   openGraph: {
-    title: "BlinkScale | Digital Experiences That Feel Alive",
+    title: "BizzVector | Build. Automate. Scale.",
     description:
-      "A premium IT company experience built for performance, clarity, and trust.",
-    url: "https://blinkscale.example",
-    siteName: "BlinkScale",
+      "We help businesses grow faster through websites, custom software, AI solutions and business automation systems.",
+    url: "https://bizzvector.com",
+    siteName: "BizzVector",
     locale: "en_US",
     type: "website",
     images: [
@@ -48,15 +49,15 @@ export const metadata = {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "BlinkScale website preview",
+        alt: "BizzVector website preview",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "BlinkScale | Digital Experiences That Feel Alive",
+    title: "BizzVector | Build. Automate. Scale.",
     description:
-      "A premium IT company experience built for performance, clarity, and trust.",
+      "We help businesses grow faster through websites, custom software, AI solutions and business automation systems.",
     images: ["/og-image.svg"],
   },
   alternates: {

@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
 function genStars(count, layer) {
   const sizeRange  = { far: [0.8, 1.4], mid: [1.3, 1.8], near: [1.8, 2.5] };
   const opacRange  = { far: [0.15, 0.35], mid: [0.35, 0.6], near: [0.55, 0.8] };
-  const twinklePct = { far: 0.3, mid: 0.5, near: 0.8 };
+  const twinklePct = { far: 0.6, mid: 0.75, near: 0.9 };
   
   const [sMin, sMax] = sizeRange[layer];
   const [oMin, oMax] = opacRange[layer];
@@ -40,35 +40,80 @@ function genStars(count, layer) {
   });
 }
 
-const FAR_STARS  = genStars(75, "far");
-const MID_STARS  = genStars(50, "mid");
-const NEAR_STARS = genStars(25, "near");
+const FAR_STARS  = genStars(120, "far");
+const MID_STARS  = genStars(80, "mid");
+const NEAR_STARS = genStars(40, "near");
 
 function StarLayer({ stars, layerRef }) {
   return (
     <div
       ref={layerRef}
-      className="pointer-events-none absolute inset-x-[-5%] top-[-10%] bottom-[-50%]"
+      className="pointer-events-none absolute inset-x-[-5%] top-[-100vh] h-[300vh]"
       aria-hidden="true"
       style={{ willChange: "transform" }}
     >
-      {stars.map((s) => (
-        <span
-          key={s.id}
-          style={{
-            position: "absolute",
-            top: `${s.top}%`,
-            left: `${s.left}%`,
-            width: s.size,
-            height: s.size,
-            borderRadius: "50%",
-            background: "white",
-            opacity: s.opacity,
-            willChange: s.twinkle ? "opacity, transform" : "auto",
-            animation: s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
-          }}
-        />
-      ))}
+      {/* Tile 1: Top (-100vh) */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[100vh]">
+        {stars.map((s) => (
+          <span
+            key={`${s.id}-t1`}
+            style={{
+              position: "absolute",
+              top: `${s.top}%`,
+              left: `${s.left}%`,
+              width: s.size,
+              height: s.size,
+              borderRadius: "50%",
+              background: "white",
+              opacity: s.opacity,
+              willChange: s.twinkle ? "opacity" : "auto",
+              animation: s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Tile 2: Center (0vh) */}
+      <div className="pointer-events-none absolute inset-x-0 top-[100vh] h-[100vh]">
+        {stars.map((s) => (
+          <span
+            key={`${s.id}-t2`}
+            style={{
+              position: "absolute",
+              top: `${s.top}%`,
+              left: `${s.left}%`,
+              width: s.size,
+              height: s.size,
+              borderRadius: "50%",
+              background: "white",
+              opacity: s.opacity,
+              willChange: s.twinkle ? "opacity" : "auto",
+              animation: s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Tile 3: Bottom (100vh) */}
+      <div className="pointer-events-none absolute inset-x-0 top-[200vh] h-[100vh]">
+        {stars.map((s) => (
+          <span
+            key={`${s.id}-t3`}
+            style={{
+              position: "absolute",
+              top: `${s.top}%`,
+              left: `${s.left}%`,
+              width: s.size,
+              height: s.size,
+              borderRadius: "50%",
+              background: "white",
+              opacity: s.opacity,
+              willChange: s.twinkle ? "opacity" : "auto",
+              animation: s.twinkle ? `starTwinkle ${s.twinkleDur}s ease-in-out ${s.twinkleDelay}s infinite alternate` : "none",
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -77,8 +122,7 @@ export default function StarField() {
   const farRef  = useRef(null);
   const midRef  = useRef(null);
   const nearRef = useRef(null);
-  const blob1Ref = useRef(null);
-  const blob2Ref = useRef(null);
+  const nebulaContainerRef = useRef(null);
   
   const rafRef  = useRef(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
@@ -107,6 +151,7 @@ export default function StarField() {
         const dx = mouseRef.current.x - tx;
         const dy = mouseRef.current.y - ty;
         const sy = window.scrollY;
+        const vh = window.innerHeight || 1000;
 
         // Only write to DOM if coordinates are actively changing or user is scrolling
         if (Math.abs(dx) > 0.0001 || Math.abs(dy) > 0.0001 || sy !== lastScrollY) {
@@ -117,14 +162,20 @@ export default function StarField() {
           const ox = (tx - 0.5) * 80;
           const oy = (ty - 0.5) * 80;
 
-          // Stars parallax with hardware-accelerated translate3d (combines scroll + mouse)
-          if (farRef.current)  farRef.current.style.transform  = `translate3d(${ox * 0.25}px, ${oy * 0.25 + sy * -0.06}px, 0)`;
-          if (midRef.current)  midRef.current.style.transform  = `translate3d(${ox * 0.55}px, ${oy * 0.55 + sy * -0.14}px, 0)`;
-          if (nearRef.current) nearRef.current.style.transform = `translate3d(${ox * 1.1}px, ${oy * 1.1 + sy * -0.25}px, 0)`;
+          // Modulo scroll calculations for seamless looping
+          const yFar = (sy * -0.06) % vh;
+          const yMid = (sy * -0.14) % vh;
+          const yNear = (sy * -0.25) % vh;
+
+          // Stars parallax with hardware-accelerated translate3d
+          if (farRef.current)  farRef.current.style.transform  = `translate3d(${ox * 0.25}px, ${oy * 0.25 + yFar}px, 0)`;
+          if (midRef.current)  midRef.current.style.transform  = `translate3d(${ox * 0.55}px, ${oy * 0.55 + yMid}px, 0)`;
+          if (nearRef.current) nearRef.current.style.transform = `translate3d(${ox * 1.1}px, ${oy * 1.1 + yNear}px, 0)`;
           
-          // Nebulas parallax (opposite direction for volume)
-          if (blob1Ref.current) blob1Ref.current.style.transform = `translate3d(${-ox * 0.4}px, ${-oy * 0.4 + sy * -0.15}px, 0)`;
-          if (blob2Ref.current) blob2Ref.current.style.transform = `translate3d(${-ox * 0.7}px, ${-oy * 0.7 + sy * -0.20}px, 0)`;
+          // Nebula container parallax (translates the single nebula container containing all scattered blobs)
+          if (nebulaContainerRef.current) {
+            nebulaContainerRef.current.style.transform = `translate3d(${-ox * 0.5}px, ${-oy * 0.5 + sy * -0.15}px, 0)`;
+          }
         }
 
         rafRef.current = requestAnimationFrame(tick);
@@ -134,12 +185,19 @@ export default function StarField() {
       // On mobile/touch, run a high-performance passive scroll event listener
       onScroll = () => {
         const sy = window.scrollY;
-        if (farRef.current)  farRef.current.style.transform  = `translate3d(0, ${sy * -0.06}px, 0)`;
-        if (midRef.current)  midRef.current.style.transform  = `translate3d(0, ${sy * -0.14}px, 0)`;
-        if (nearRef.current) nearRef.current.style.transform = `translate3d(0, ${sy * -0.25}px, 0)`;
+        const vh = window.innerHeight || 1000;
         
-        if (blob1Ref.current) blob1Ref.current.style.transform = `translate3d(0, ${sy * -0.15}px, 0)`;
-        if (blob2Ref.current) blob2Ref.current.style.transform = `translate3d(0, ${sy * -0.20}px, 0)`;
+        const yFar = (sy * -0.06) % vh;
+        const yMid = (sy * -0.14) % vh;
+        const yNear = (sy * -0.25) % vh;
+        
+        if (farRef.current)  farRef.current.style.transform  = `translate3d(0, ${yFar}px, 0)`;
+        if (midRef.current)  midRef.current.style.transform  = `translate3d(0, ${yMid}px, 0)`;
+        if (nearRef.current) nearRef.current.style.transform = `translate3d(0, ${yNear}px, 0)`;
+        
+        if (nebulaContainerRef.current) {
+          nebulaContainerRef.current.style.transform = `translate3d(0, ${sy * -0.15}px, 0)`;
+        }
       };
       window.addEventListener("scroll", onScroll, { passive: true });
       onScroll(); // Initialize positions
@@ -184,25 +242,68 @@ export default function StarField() {
       aria-hidden="true"
       role="presentation"
     >
-      {/* ── Nebula Blobs (2 max) ── */}
-      <div ref={blob1Ref} style={{
-        position: "absolute", top: "10%", left: "15%",
-        width: "40vw", height: "40vw", borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(30,20,80,0.4) 0%, transparent 65%)",
-        filter: "blur(60px)",
-        animation: "auraDrift 16s ease-in-out infinite alternate",
-        willChange: "transform",
-      }} />
-      <div ref={blob2Ref} style={{
-        position: "absolute", bottom: "10%", right: "10%",
-        width: "35vw", height: "35vw", borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(20,50,90,0.3) 0%, transparent 60%)",
-        filter: "blur(50px)",
-        animation: "auraDrift 22s ease-in-out infinite alternate-reverse",
-        willChange: "transform",
-      }} />
+      {/* ── Nebula Container (Translates on scroll + mouse movement) ── */}
+      <div
+        ref={nebulaContainerRef}
+        className="pointer-events-none absolute inset-x-0 top-0 h-[400vh]"
+        style={{ willChange: "transform" }}
+      >
+        {/* Blob 1: Electric Blue - visible at start */}
+        <div style={{
+          position: "absolute", top: "8vh", left: "15%",
+          width: "45vw", height: "45vw", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(0, 87, 255, 0.22) 0%, transparent 65%)",
+          filter: "blur(70px)",
+          animation: "auraDrift 16s ease-in-out infinite alternate",
+        }} />
+        
+        {/* Blob 2: Silver Mist - visible early-mid scroll */}
+        <div style={{
+          position: "absolute", top: "65vh", right: "10%",
+          width: "40vw", height: "40vw", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(226, 232, 240, 0.05) 0%, transparent 60%)",
+          filter: "blur(65px)",
+          animation: "auraDrift 22s ease-in-out infinite alternate-reverse",
+        }} />
 
-      {/* ── 3 Star Layers ── */}
+        {/* Blob 3: Deep Blue - visible mid scroll */}
+        <div style={{
+          position: "absolute", top: "135vh", left: "20%",
+          width: "48vw", height: "48vw", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(0, 31, 128, 0.28) 0%, transparent 68%)",
+          filter: "blur(80px)",
+          animation: "auraDrift 20s ease-in-out infinite alternate",
+        }} />
+
+        {/* Blob 4: Electric Blue - visible late scroll */}
+        <div style={{
+          position: "absolute", top: "210vh", right: "15%",
+          width: "42vw", height: "42vw", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(0, 87, 255, 0.16) 0%, transparent 62%)",
+          filter: "blur(70px)",
+          animation: "auraDrift 26s ease-in-out infinite alternate-reverse",
+        }} />
+
+        {/* Blob 5: Silver Mist - visible near bottom */}
+        <div style={{
+          position: "absolute", top: "280vh", left: "10%",
+          width: "46vw", height: "46vw", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(226, 232, 240, 0.05) 0%, transparent 65%)",
+          filter: "blur(75px)",
+          animation: "auraDrift 18s ease-in-out infinite alternate",
+        }} />
+
+        {/* Blob 6: Deep Blue - visible at footer */}
+        <div style={{
+          position: "absolute", top: "350vh", right: "12%",
+          width: "40vw", height: "40vw", borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(0, 31, 128, 0.24) 0%, transparent 60%)",
+          filter: "blur(60px)",
+          animation: "auraDrift 24s ease-in-out infinite alternate-reverse",
+        }} />
+      </div>
+
+      {/* ── 3 Star Layers (Seamless looping) ── */}
       <StarLayer stars={FAR_STARS}  layerRef={farRef}  />
       <StarLayer stars={MID_STARS}  layerRef={midRef}  />
       <StarLayer stars={NEAR_STARS} layerRef={nearRef} />

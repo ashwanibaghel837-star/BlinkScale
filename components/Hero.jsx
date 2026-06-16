@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   motion,
   useMotionValue,
@@ -25,17 +25,18 @@ const PARTICLES = [
 ];
 
 const heroSignals = [
-  { label: "Lightning-fast builds", title: "Speed",        detail: "Performance tuned from structure to polish."            },
-  { label: "Always-on partnership", title: "24/7 Support", detail: "Reliable delivery rhythms that stay calm after launch." },
-  { label: "Built for growth",      title: "Scalable",     detail: "Flexible systems ready for the next chapter."           },
-  { label: "Premium-led delivery",  title: "Secure",       detail: "Calm architecture with strong operational footing."     },
+  { label: "Custom tailored systems", title: "Websites",      detail: "Professional business web development built to convert." },
+  { label: "Bespoke operations engine", title: "Software",    detail: "Tailor-made dashboards, CRMs, and portals." },
+  { label: "Effortless lead flows",   title: "Automation",  detail: "Remove repetitive work through automated workflows." },
+  { label: "Smart artificial intelligence", title: "AI Solutions", detail: "Integrate generative AI assistants and document processing." },
 ];
 
-const heroStats = ["Design-led systems", "Scalable engineering", "Reliable post-launch support"];
+const heroStats = ["Websites", "Custom Software", "Business Automation", "AI Solutions"];
 
 export default function Hero() {
   const reduceMotion = useSafeReducedMotion();
   const heroRef = useRef(null);
+  const [titleComplete, setTitleComplete] = useState(false);
 
   // Mouse 3D tilt on the solar system container
   const mouseX = useMotionValue(0);
@@ -98,11 +99,11 @@ export default function Hero() {
           {/* Subtle atmospheric haze — does NOT block stars */}
           <div className="hero-grid absolute inset-0 opacity-18" aria-hidden="true" />
           <div
-            className="pointer-events-none absolute inset-x-[8%] top-0 h-56 bg-[radial-gradient(ellipse_at_top,rgba(100,80,255,0.14),transparent_62%)]"
+            className="pointer-events-none absolute inset-x-[8%] top-0 h-56 bg-[radial-gradient(ellipse_at_top,rgba(0,87,255,0.14),transparent_62%)]"
             aria-hidden="true"
           />
           <div
-            className="pointer-events-none absolute inset-x-[20%] bottom-0 h-40 bg-[radial-gradient(ellipse_at_bottom,rgba(40,100,220,0.12),transparent_60%)]"
+            className="pointer-events-none absolute inset-x-[20%] bottom-0 h-40 bg-[radial-gradient(ellipse_at_bottom,rgba(0,87,255,0.12),transparent_60%)]"
             aria-hidden="true"
           />
           {/* Right-side nebula fill — slow drift blob */}
@@ -113,7 +114,7 @@ export default function Hero() {
               top: "15%", right: "-8%",
               width: 420, height: 420,
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(120,60,255,0.11) 0%, rgba(60,40,160,0.07) 45%, transparent 72%)",
+              background: "radial-gradient(circle, rgba(0,87,255,0.12) 0%, rgba(0,31,128,0.06) 45%, transparent 72%)",
               filter: "blur(48px)",
               animation: "auraDrift 18s ease-in-out infinite alternate",
             }}
@@ -126,7 +127,7 @@ export default function Hero() {
               bottom: "10%", left: "-6%",
               width: 320, height: 320,
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(30,80,200,0.10) 0%, rgba(20,50,140,0.05) 50%, transparent 74%)",
+              background: "radial-gradient(circle, rgba(226,232,240,0.06) 0%, rgba(0,87,255,0.04) 50%, transparent 74%)",
               filter: "blur(40px)",
               animation: "auraDrift 22s ease-in-out infinite alternate-reverse",
             }}
@@ -152,18 +153,22 @@ export default function Hero() {
             {/* ── Headline ── */}
             <motion.div style={{ y: textY }} className="w-full">
               <Reveal>
-                <span className="eyebrow">Premium Digital Products</span>
+                <span className="eyebrow">🚀 Trusted Technology Partner For Growing Businesses</span>
               </Reveal>
               <Reveal delay={0.06}>
-                <h1 className="mx-auto mt-8 max-w-[14ch] text-5xl font-semibold leading-[0.96] text-white sm:text-6xl lg:text-7xl xl:text-[5rem]">
-                  We Build Digital Experiences That Feel Alive.
+                <h1 className="mx-auto mt-8 max-w-[14ch] text-5xl font-semibold leading-[0.96] text-white sm:text-6xl lg:text-7xl xl:text-[5.5rem] tracking-tight min-h-[1.2em]">
+                  <Typewriter 
+                    text="Build. Automate. Scale." 
+                    onComplete={() => setTitleComplete(true)} 
+                  />
                 </h1>
               </Reveal>
-              <Reveal delay={0.1}>
-                <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
-                  Helping businesses grow through smart, scalable IT solutions.
-                  Beautifully designed products, resilient systems, and support
-                  that keeps momentum moving.
+              <Reveal delay={0.1} show={titleComplete}>
+                <p className="mx-auto mt-8 max-w-3xl text-sm leading-8 text-slate-300 sm:text-base md:text-lg">
+                  We help businesses grow faster through websites, custom software, AI solutions and business automation systems.
+                  <span className="block mt-4 text-xs sm:text-sm text-slate-400">
+                    Whether you&apos;re a startup, hotel, restaurant, NGO or growing company, we build technology that saves time, reduces manual work and drives results.
+                  </span>
                 </p>
               </Reveal>
             </motion.div>
@@ -192,11 +197,11 @@ export default function Hero() {
             </motion.div>
 
             {/* ── CTA Buttons ── */}
-            <Reveal delay={0.14}>
+            <Reveal delay={0.14} show={titleComplete}>
               <div className="mt-6 flex flex-col items-center gap-4 sm:flex-row">
-                <MagneticButton href="#contact">Get Started</MagneticButton>
-                <MagneticButton href="#services" variant="ghost">
-                  View Services
+                <MagneticButton href="#contact">Book A Free Consultation</MagneticButton>
+                <MagneticButton href="#portfolio" variant="ghost">
+                  Explore Our Work
                 </MagneticButton>
               </div>
             </Reveal>
@@ -241,7 +246,7 @@ export default function Hero() {
             <Reveal delay={0.22}>
               <a
                 href="#services"
-                className="focus-ring mt-10 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 text-sm text-slate-200 transition duration-300 hover:border-blue-300/25 hover:bg-blue-400/10 hover:text-white"
+                className="focus-ring mt-10 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 text-sm text-slate-200 transition duration-300 hover:border-cyan-500/25 hover:bg-cyan-500/10 hover:text-white"
               >
                 <span>Scroll to explore</span>
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-base">
@@ -257,15 +262,68 @@ export default function Hero() {
 }
 
 // Inline Reveal — mount animation, w-full for proper text centering
-function Reveal({ children, delay = 0 }) {
+function Reveal({ children, delay = 0, show = true }) {
   return (
     <motion.div
       className="w-full"
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
+  );
+}
+
+// Premium Typewriter helper with organic pauses on punctuation
+function Typewriter({ text, speed = 80, delay = 400, onComplete }) {
+  const [displayedText, setDisplayedText] = useState("");
+  const [complete, setComplete] = useState(false);
+
+  // Use a ref for onComplete to prevent infinite re-renders
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  });
+
+  useEffect(() => {
+    setDisplayedText("");
+    setComplete(false);
+
+    let timeoutId;
+    let currentIndex = 0;
+
+    const startTimeout = setTimeout(() => {
+      const type = () => {
+        if (currentIndex < text.length) {
+          const char = text[currentIndex];
+          setDisplayedText(prev => prev + char);
+          currentIndex++;
+          const nextDelay = char === "." && currentIndex < text.length ? 500 : speed;
+          timeoutId = setTimeout(type, nextDelay);
+        } else {
+          setComplete(true);
+          if (onCompleteRef.current) onCompleteRef.current();
+        }
+      };
+      type();
+    }, delay);
+
+    return () => {
+      clearTimeout(startTimeout);
+      clearTimeout(timeoutId);
+    };
+  }, [text, speed, delay]); // Clean, minimal dependencies
+
+  return (
+    <span className="relative">
+      {displayedText}
+      {!complete && (
+        <span 
+          className="inline-block w-[3px] bg-cyan-400 ml-1.5 h-[0.85em] align-middle animate-pulse"
+          style={{ animationDuration: "0.6s" }}
+        />
+      )}
+    </span>
   );
 }
