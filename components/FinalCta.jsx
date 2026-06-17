@@ -38,17 +38,38 @@ export default function FinalCta() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.requirement) {
       alert("Please fill in Name, Email and Requirement.");
       return;
     }
+    
     setStatus("sending");
-    setTimeout(() => {
-      setStatus("success");
-      setFormData({ name: "", business: "", mobile: "", email: "", requirement: "" });
-    }, 1200);
+    
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setStatus("success");
+        setFormData({ name: "", business: "", mobile: "", email: "", requirement: "" });
+      } else {
+        alert(result.error || "Failed to send requirement. Please try again later.");
+        setStatus("idle");
+      }
+    } catch (err) {
+      console.error("Error submitting contact form:", err);
+      alert("Something went wrong. Please check your network connection and try again.");
+      setStatus("idle");
+    }
   };
 
   return (
